@@ -24,3 +24,19 @@ HEADERS += \
     hardware/util/gpio.h \
     hardware/servo.h \
     hardware/stepper.h
+
+
+# OpenCV
+#INCLUDEPATH += /opt/opencv/2.4.8/include
+#LIBS += -L/opt/opencv/2.4.8/lib
+#LIBS += -lopencv_core \
+#        -lopencv_highgui \
+#        -lopencv_imgproc
+unix {
+        CONFIG += link_pkgconfig
+        PKGCONFIG += opencv
+}
+win32{
+LIBS += -L "C:/opencv/build/x86/mingw/lib/" -llibopencv_core242 -llibopencv_ml242 -llibopencv_highgui242 -llibopencv_imgproc242 -llibopencv_objdetect242
+INCLUDEPATH += "C:/opencv/build/include/"
+}
