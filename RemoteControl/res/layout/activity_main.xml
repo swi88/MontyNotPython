@@ -1,0 +1,101 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="${relativePackage}.${activityClass}" >
+
+        
+    <Button
+        android:id="@+id/buttonTakePicture"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingTop="35dp"
+        android:paddingBottom="35dp"
+        android:layout_marginTop="10dp"
+        android:onClick="onTakePictureClicked"
+        android:text="@string/take_Picture" />
+    <LinearLayout
+        android:id="@+id/linearRotate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@id/buttonTakePicture">
+        <Button
+	        android:id="@+id/buttonRotateLeft"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:onClick="onRotateLeftClicked"
+	        android:text="@string/rotate_left" />
+        <Button
+	        android:id="@+id/buttonRotateRight"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:onClick="onRotateRightClicked"
+	        android:text="@string/rotate_right" />
+    </LinearLayout>
+    
+     <LinearLayout
+        android:id="@+id/linear1Arm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:orientation="vertical"
+        android:layout_toLeftOf="@id/buttonTakePicture">
+
+        <Button
+	        android:id="@+id/button1Up"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:onClick="on1UpClicked"
+	        android:text="Oben" />
+        <Button
+	        android:id="@+id/button1Down"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:onClick="on1DownClicked"
+	        android:text="Unten" />
+    </LinearLayout>
+    
+    <TextView
+             android:id="@+id/text1Arm"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_alignLeft="@id/linear1Arm"
+             android:layout_marginLeft="5dp"
+             android:layout_above="@id/linear1Arm"
+             android:text="1. Gelenk" />
+    
+    <LinearLayout
+        android:id="@+id/linear2Arm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:orientation="vertical"
+        android:layout_toRightOf="@id/buttonTakePicture">
+
+        <Button
+	        android:id="@+id/button2Up"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:onClick="on2UpClicked"
+	        android:text="Oben" />
+        <Button
+	        android:id="@+id/button2Down"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:onClick="on2DownClicked"
+	        android:text="Unten" />
+    </LinearLayout>
+    
+    <TextView android:id="@+id/text2Arm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/linear2Arm"
+        android:layout_marginLeft="5dp"
+        android:layout_above="@+id/linear2Arm"
+        android:text="2. Gelenk"/>
+
+</RelativeLayout>
