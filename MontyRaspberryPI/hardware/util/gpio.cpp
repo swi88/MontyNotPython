@@ -3,6 +3,7 @@
 #include <iostream>
 #include <sstream>
 #include "gpio.h"
+#include <QDebug>
  
 using namespace std;
  
@@ -14,14 +15,16 @@ GPIO::GPIO(string gnum)
  
 int GPIO::export_gpio()
 {
+    qDebug()<<QString::fromStdString(gpionum);
     string export_str = "/sys/class/gpio/export";
     ofstream exportgpio(export_str.c_str()); // Open "export" file. Convert C++ string to C string. Required for all Linux pathnames
-    if (exportgpio < 0){
-        cout << " OPERATION FAILED: Unable to export GPIO"<< this->gpionum <<" ."<< endl;
+    if (exportgpio.fail()){
+        qDebug()<< " OPERATION FAILED: Unable to export GPIO"<<QString::fromStdString(gpionum);
         return -1;
     }
  
     exportgpio << this->gpionum ; //write GPIO number to export
+    exportgpio << endl;
     exportgpio.close(); //close export file
     return 0;
 }
@@ -36,6 +39,7 @@ int GPIO::unexport_gpio()
     }
  
     unexportgpio << this->gpionum ; //write GPIO number to unexport
+    unexportgpio << endl;
     unexportgpio.close(); //close unexport file
     return 0;
 }
@@ -51,6 +55,7 @@ int GPIO::setdir_gpio(string dir)
         }
  
         setdirgpio << dir; //write direction to direction file
+        setdirgpio << endl;
         setdirgpio.close(); // close direction file
         return 0;
 }
@@ -66,6 +71,7 @@ int GPIO::setval_gpio(string val)
         }
  
         setvalgpio << val ;//write value to value file
+        setvalgpio << endl;
         setvalgpio.close();// close value file 
         return 0;
 }
@@ -89,7 +95,7 @@ int GPIO::getval_gpio(string& val){
     getvalgpio.close(); //close the value file
     return 0;
 }
- 
+
 string GPIO::get_gpionum(){
  
 return this->gpionum;

@@ -24,6 +24,7 @@ public:
 private:
 	
 	const static int SEQUENCES[][4];
+    const static int STEPS;
 	vector<GPIO*> gpios;
     int counter;
     QThread* thread;

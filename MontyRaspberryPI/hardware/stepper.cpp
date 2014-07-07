@@ -8,6 +8,7 @@
 #include <unistd.h>
 #include <QDebug>
 const int Stepper::SEQUENCES[][4]= {
+    /**
     {1,0,0,0},
     {1,1,0,0},
     {0,1,0,0},
@@ -16,8 +17,13 @@ const int Stepper::SEQUENCES[][4]= {
     {0,0,1,1},
     {0,0,0,1},
     {1,0,0,1}
+     **/
+    {1,0,1,0},
+    {0,1,1,0},
+    {0,1,0,1},
+    {1,0,0,1},
 };
-
+const int Stepper::STEPS= 4;
 /**
  * @brief create a new stepper instance
  * @details init the pins
@@ -30,6 +36,7 @@ Stepper::Stepper(){
     connect(thread, SIGNAL(started()), this, SLOT(switchActiveState()));
     counter=0;
     active=false;
+    qDebug()<<"init gpio";
     GPIO* pin17 = new GPIO("17");
     pin17->export_gpio();
     pin17->setdir_gpio("out");
@@ -99,7 +106,7 @@ void Stepper::stop()
 void Stepper::clockwise()
 {
     for(int counter=0; counter<steps; counter++){
-        for(int seq=0; seq < 8; seq++){
+        for(int seq=0; seq < STEPS; seq++){
             for(int i=0;i < 4;i++){
                 if(SEQUENCES[seq][i]==1){
                     gpios.at(i)->setval_gpio("1");
@@ -121,7 +128,7 @@ void Stepper::counterclockwise()
 {
     for(int counter=0; counter<steps; counter++){
         //move to sequence
-        for(int seq=7; seq >= 0; seq--){
+        for(int seq=STEPS-1; seq >= 0; seq--){
             for(int i=0;i < 4;i++){
                 if(SEQUENCES[seq][i]==1){
                     gpios.at(i)->setval_gpio("1");

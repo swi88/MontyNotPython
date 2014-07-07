@@ -5,7 +5,7 @@
 #-------------------------------------------------
 
 QT       += core
-
+QT       += network
 QT       -= gui
 
 TARGET = MontyRaspberryPI
@@ -18,12 +18,14 @@ TEMPLATE = app
 SOURCES += main.cpp \
     hardware/util/gpio.cpp \
     hardware/servo.cpp \
-    hardware/stepper.cpp
+    hardware/stepper.cpp \
+    server.cpp
 
 HEADERS += \
     hardware/util/gpio.h \
     hardware/servo.h \
-    hardware/stepper.h
+    hardware/stepper.h \
+    server.h
 
 
 # OpenCV
