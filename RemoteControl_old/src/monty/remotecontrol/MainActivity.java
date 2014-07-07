@@ -2,15 +2,11 @@ package monty.remotecontrol;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-import android.R;
 import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -42,61 +38,42 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		// start server listener
-		listener = new ServerListenerThread();
-		listener.start();
+		// connect to the server
+		connect();
+		if (connected) {
+			// start server listener
+			listener = new ServerListenerThread(in);
+		}
 	}
 	
 	public class ServerListenerThread extends Thread {
-				
-		public ServerListenerThread() {
+		
+		private DataInputStream in;
+		
+		public ServerListenerThread(DataInputStream in) {
+			this.in = in;
 		}
 		
 		@Override
 		public void run() {
-			// connect to the server
-			connect();
-			if (connected) {
-				String command = "";
-				while (!command.equals(QUIT_COMMAND)) {
-					try {
-						command = in.readUTF();
-						switch (command) { 
-						case GET_IMAGE_COMMAND:
-							// Receive Image and write it to the harddrive
-							final String fName = in.readUTF();
-							byte[] byteArray = new byte[10240];
-							int bytesReaded = in.read(byteArray);
-							FileOutputStream fos = openFileOutput(fName, Context.MODE_PRIVATE);
-							fos.write(byteArray, 0, bytesReaded);
-							fos.close();
-							runOnUiThread(new Runnable() {
-								@Override
-								public void run() {
-									Intent intent = new Intent(MainActivity.this, ImageActivity.class);
-									intent.putExtra("fName", fName);
-									startActivity(intent);
-								}
-							});
-							break;
-						case QUIT_COMMAND:
-							connected = false;
-							socket.close();
-							System.out.println("CLIENT: quit from server");
-							runOnUiThread(new Runnable() {
-								@Override
-								public void run() {
-									Toast.makeText(MainActivity.this, "Server disconnected", Toast.LENGTH_SHORT).show();		
-								}
-							});
-							break;
-						}
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
+			String command = "";
+			while (command != QUIT_COMMAND) {
+				try {
+					command = in.readUTF();
+//					switch (command) {
+//					case GET_IMAGE_COMMAND:
+//						// Receive Image, TODO
+//						break;
+//					case QUIT_COMMAND:
+//						connected = false;
+//						break;
+//					}
+				} catch (IOException e) {
+					e.printStackTrace();
 				}
 			}
 		}
+		
 	}
 	
 	// attempts to connect to chat server and returns true if could, false
@@ -109,7 +86,6 @@ public class MainActivity extends Activity {
 			// obtain streams
 			in = new DataInputStream(socket.getInputStream());
 			out = new DataOutputStream(socket.getOutputStream());
-			System.out.println("CLIENT: connected to server");
 		} catch (UnknownHostException e) {
 			Log.e("THREAD", "ERROR: " + e.getMessage());
 			System.out.println("ERROR: Unknown Host - " + e.getMessage());
@@ -157,7 +133,6 @@ public class MainActivity extends Activity {
 					out.flush();
 					break;
 				}
-				System.out.println("CLIENT: sent command to server");
 			} catch (IOException e) {
 				e.printStackTrace();
 				Toast.makeText(this, R.string.server_not_reachable, Toast.LENGTH_SHORT).show();
