@@ -22,9 +22,17 @@ public:
     bool join();
     void stop();
 private:
-	
-	const static int SEQUENCES[][4];
-    const static int STEPS;
+
+    void sequence1();
+    void sequence2();
+    void sequence3();
+    void sequence4();
+    void sequence5();
+    void sequence6();
+    void sequence7();
+    void sequence8();
+
+    const static int TIME_TO_WAIT;
 	vector<GPIO*> gpios;
     int counter;
     QThread* thread;
