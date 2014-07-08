@@ -21,28 +21,28 @@ Stepper::Stepper(){
     counter=0;
     active=false;
     qDebug()<<"init gpio";
-    GPIO* pin17 = new GPIO("17");
+    GPIO* pin17 = new GPIO(17);
     pin17->export_gpio();
     pin17->setdir_gpio("out");
-    pin17->setval_gpio("0");
+    pin17->setval_gpio(0);
     gpios.push_back(pin17);
 
-    GPIO* pin10 = new GPIO("10");
+    GPIO* pin10 = new GPIO(10);
     pin10->export_gpio();
     pin10->setdir_gpio("out");
-    pin10->setval_gpio("0");
+    pin10->setval_gpio(0);
     gpios.push_back(pin10);
 
-    GPIO* pin21 = new GPIO("27");
+    GPIO* pin21 = new GPIO(27);
     pin21->export_gpio();
     pin21->setdir_gpio("out");
-    pin21->setval_gpio("0");
+    pin21->setval_gpio(0);
     gpios.push_back(pin21);
 
-    GPIO* pin22 = new GPIO("22");
+    GPIO* pin22 = new GPIO(22);
     pin22->export_gpio();
     pin22->setdir_gpio("out");
-    pin22->setval_gpio("0");
+    pin22->setval_gpio(0);
     gpios.push_back(pin22);
 }
 /**
@@ -91,74 +91,74 @@ void Stepper::stop()
 
 void Stepper::sequence1()
 {
-    gpios.at(3)->setval_gpio("1");
+    gpios.at(3)->setval_gpio(1);
     usleep(TIME_TO_WAIT);
-    gpios.at(3)->setval_gpio("0");
+    gpios.at(3)->setval_gpio(0);
 }
 
 void Stepper::sequence2()
 {
-    gpios.at(3)->setval_gpio("1");
-    gpios.at(2)->setval_gpio("1");
+    gpios.at(3)->setval_gpio(1);
+    gpios.at(2)->setval_gpio(1);
     usleep(TIME_TO_WAIT);
-    gpios.at(3)->setval_gpio("0");
-    gpios.at(2)->setval_gpio("0");
+    gpios.at(3)->setval_gpio(0);
+    gpios.at(2)->setval_gpio(0);
 
 }
 
 void Stepper::sequence3()
 {
 
-    gpios.at(2)->setval_gpio("1");
+    gpios.at(2)->setval_gpio(1);
     usleep(TIME_TO_WAIT);
-    gpios.at(2)->setval_gpio("0");
+    gpios.at(2)->setval_gpio(0);
 }
 
 void Stepper::sequence4()
 {
 
-    gpios.at(1)->setval_gpio("1");
-    gpios.at(2)->setval_gpio("1");
+    gpios.at(1)->setval_gpio(1);
+    gpios.at(2)->setval_gpio(1);
     usleep(TIME_TO_WAIT);
-    gpios.at(1)->setval_gpio("0");
-    gpios.at(2)->setval_gpio("0");
+    gpios.at(1)->setval_gpio(0);
+    gpios.at(2)->setval_gpio(0);
 
 }
 
 void Stepper::sequence5()
 {
 
-    gpios.at(1)->setval_gpio("1");
+    gpios.at(1)->setval_gpio(1);
     usleep(TIME_TO_WAIT);
-    gpios.at(1)->setval_gpio("0");
+    gpios.at(1)->setval_gpio(0);
 }
 
 void Stepper::sequence6()
 {
 
-    gpios.at(0)->setval_gpio("1");
-    gpios.at(1)->setval_gpio("1");
+    gpios.at(0)->setval_gpio(1);
+    gpios.at(1)->setval_gpio(1);
     usleep(TIME_TO_WAIT);
-    gpios.at(0)->setval_gpio("0");
-    gpios.at(1)->setval_gpio("0");
+    gpios.at(0)->setval_gpio(0);
+    gpios.at(1)->setval_gpio(0);
 }
 
 void Stepper::sequence7()
 {
 
-    gpios.at(0)->setval_gpio("1");
+    gpios.at(0)->setval_gpio(1);
     usleep(TIME_TO_WAIT);
-    gpios.at(0)->setval_gpio("0");
+    gpios.at(0)->setval_gpio(0);
 }
 
 void Stepper::sequence8()
 {
 
-    gpios.at(3)->setval_gpio("1");
-    gpios.at(0)->setval_gpio("1");
+    gpios.at(3)->setval_gpio(1);
+    gpios.at(0)->setval_gpio(1);
     usleep(TIME_TO_WAIT);
-    gpios.at(3)->setval_gpio("0");
-    gpios.at(0)->setval_gpio("0");
+    gpios.at(3)->setval_gpio(0);
+    gpios.at(0)->setval_gpio(0);
 }
 /**
  * @brief clockwise, called by thread

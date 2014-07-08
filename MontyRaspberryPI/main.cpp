@@ -12,7 +12,7 @@ int main(int argc, char *argv[])
     QCoreApplication a(argc, argv);
 
 
-    GPIO* pin17 = new GPIO("17");
+    GPIO* pin17 = new GPIO(17);
     pin17->export_gpio();
     pin17->setdir_gpio("out");
     return 0;
