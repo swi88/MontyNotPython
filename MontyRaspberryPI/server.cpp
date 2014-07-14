@@ -11,6 +11,7 @@ Server::Server() :QObject()
 
 void Server::listen()
 {
+    qDebug()<<"listen";
     server->listen(QHostAddress::Any, 5100);
 }
 

@@ -11,10 +11,10 @@ class Server : public QObject
 public:
     Server();
 
+    void listen();
 
 
 private:
-    void listen();
     QTcpServer *server;
     QTcpSocket *socket;
 

@@ -1,3 +1,5 @@
+#include "server.h"
+
 #include <QCoreApplication>
 #include <QThread>
 
@@ -10,11 +12,17 @@ int main(int argc, char *argv[])
 {
 
     QCoreApplication a(argc, argv);
-
-
+    QThread* t = new QThread;
+    Server s;
+    s.listen();
+    s.moveToThread(t);
+    t->start();
+    while(1);
+    /**
     GPIO* pin17 = new GPIO(17);
     pin17->export_gpio();
     pin17->setdir_gpio("out");
+    **/
     return 0;
     //Servo servo(1);
     /**
