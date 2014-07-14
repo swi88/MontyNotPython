@@ -2,6 +2,20 @@
 #include <cstdio>
 #include <QtDebug>
 
+int int_from_bytes(const char * bytes, bool reverse)
+{
+    // usage: int_from_bytes(bytes, SYSTEM_ENDIANNESS != ARRAY_ENDIANNESS)
+    if(!reverse)
+        return *(int *)(void *)bytes;
+
+    char tmp[sizeof(int)];
+
+    for(size_t i = sizeof(tmp); i--; ++bytes)
+        tmp[i] = *bytes;
+
+    return *(int *)(void *)tmp;
+}
+
 Server::Server() :QObject()
 {
     server = new QTcpServer(this);
@@ -31,18 +45,18 @@ void Server::on_newConnection()
 }
 
 void Server::on_readyRead()
-{
-    while(socket->canReadLine())
-    {
-        QByteArray ba = socket->readLine();
+{   qDebug() << "read input";
+    QByteArray tlength = socket->read(4); // read int32
+    int length = int_from_bytes(tlength.data(), true);
+    QByteArray message = socket->read(length);
 
-        if(strcmp(ba.constData(), "!exit\n") == 0)
-        {
-            socket->disconnectFromHost();
-            break;
-        }
-        printf(">> %s", ba.constData());
+    if(strcmp(message.constData(), "#QUIT_COMMAND") == 0)
+    {
+        socket->disconnectFromHost();
     }
+    if(strcmp(message.constData(), "hallo") == 0)
+        qDebug() << "hallo";
+    printf(">> %s", message.constData());
 }
 
 void Server::on_disconnected()
