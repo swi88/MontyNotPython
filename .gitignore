@@ -1,0 +1,7 @@
+lib/
+bin/
+Debug/
+Default/
+.settings/
+.metadata/
+.classpath
