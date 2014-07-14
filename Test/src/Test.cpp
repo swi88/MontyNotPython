@@ -66,9 +66,9 @@ void capturePicture() {
 }
 
 void performMovement() {
-	// evtl. Soll-Korrektur
+	// ggf. eine Soll-Korrektur
 	if((soll & ist) > 0) {
-		// TODO Ultraschallsensor auslesen und in Soll-Wert einfließen lassen
+		// TODO Ultraschallsensor auslesen und in Soll-Korrektur einfließen lassen
 		if(soll == MOVE_UP && (ist & ZOOM_OUT_POSITION) == 0 ) soll = ZOOM_OUT;
 		else if(soll == MOVE_DOWN && (ist & ZOOM_IN_POSITION) == 0) soll = ZOOM_IN;
 		else soll = HOLD_POSITION;
@@ -77,6 +77,9 @@ void performMovement() {
 }
 
 void processVideo() {
+	// Hier beginnt die eigentliche Hauptfunktionalität!
+	// Initialisierungen:
+
 	//create the capture object
 	VideoCapture capture(0);
 
@@ -85,27 +88,29 @@ void processVideo() {
 	bool pictureCaptured = false;
 	bool moving = false;
 
-	// buffer
+	// Buffer für stabileres Bewegungsrechteck
 	int fxBuf[10];
-
 	int fyBuf[10];
-
 	int lxBuf[10];
 	int lxBufHigh = 0;
 	lxBuf[0] = 0;
-
 	int lyBuf[10];
 	int lyBufHigh = 0;
 	lyBuf[0] = 0;
-
 	uchar bufIdx = 0;
 
+	// Eckpunkte des Bewegungsrechtecks
+	// Bsp.: fx = first x, ly = last y
 	int fx;
 	int fy;
 	int lx;
 	int ly;
+
+	// temporäre Variablen für verschiedene Zwecke genutzt!
 	int tmp;
 	int tmp2;
+
+	// Bildgröße und davon abhängige Größen
 	int xSize;
 	int ySize;
 	int xSizeFourth;
@@ -116,12 +121,17 @@ void processVideo() {
 	int ySizeThreeFourth;
 	int colsBorder;
 	int rowsBorder;
+
+	// structured element, wird zur Rauschentfernung benötigt
 	Mat elem;
+
 	if (!capture.isOpened()) {
 		//error in opening the video input
 		cerr << "Cannot open the video cam" << endl;
 		exit(EXIT_FAILURE);
 	}
+
+	// Bildgröße und davon abhängige Größen einmal berechnen und dann speichern (spart Rechenzeit)
 	xSize = capture.get(CV_CAP_PROP_FRAME_WIDTH); //get the width of frames of the video
 	ySize = capture.get(CV_CAP_PROP_FRAME_HEIGHT); //get the height of frames of the video
 	xSizeHalf = xSize / 2;
@@ -130,10 +140,14 @@ void processVideo() {
 	ySizeFourth = ySizeHalf / 2;
 	xSizeThreeFourth = xSizeHalf + xSizeFourth;
 	ySizeThreeFourth = ySizeHalf + ySizeFourth;
+
+	// fehlende Bufferinitialisierungen in Abhängigkeit der Bildgröße
 	int fyBufHigh = ySize;
 	int fxBufHigh = xSize;
 	fxBuf[0] = xSize;
 	fyBuf[0] = ySize;
+
+	// eigentliche main-Schleife
 	//read input data. ESC or 'q' for quitting
 	while ((char) keyboard != 'q' && (char) keyboard != 27) {
 		//read the current frame

@@ -68,7 +68,7 @@ int GPIO::setval_gpio(int val)
  
 string GPIO::getval_gpio(){
     //TODO is buggy
-    int l;
+    int l = 0;
     sprintf (fName, "/sys/class/gpio/gpio%d/value", gpionum) ;
       if ((fd = fopen (fName, "r")) == NULL)
       {
