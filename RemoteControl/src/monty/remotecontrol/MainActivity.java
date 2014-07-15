@@ -60,8 +60,7 @@ public class MainActivity extends Activity {
 				while (!command.equals(QUIT_COMMAND)) {
 					try {
 						command = in.readUTF();
-						switch (command) { 
-						case GET_IMAGE_COMMAND:
+						if (command.equals(GET_IMAGE_COMMAND)) {
 							// Receive Image and write it to the harddrive
 							final String fName = in.readUTF();
 							byte[] byteArray = new byte[10240];
@@ -77,8 +76,7 @@ public class MainActivity extends Activity {
 									startActivity(intent);
 								}
 							});
-							break;
-						case QUIT_COMMAND:
+						} else if(command.equals(QUIT_COMMAND)) {
 							connected = false;
 							socket.close();
 							System.out.println("CLIENT: quit from server");
@@ -88,7 +86,6 @@ public class MainActivity extends Activity {
 									Toast.makeText(MainActivity.this, "Server disconnected", Toast.LENGTH_SHORT).show();		
 								}
 							});
-							break;
 						}
 					} catch (IOException e) {
 						e.printStackTrace();
@@ -122,7 +119,7 @@ public class MainActivity extends Activity {
 		return true;
 	}
 	
-	public void onButtonClicked(View v) {
+	public void onCommand(View v) {
 		// send command to server
 		if (connected) {
 			try {
