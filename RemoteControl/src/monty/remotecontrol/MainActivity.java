@@ -1,9 +1,11 @@
 package monty.remotecontrol;
 
+import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
@@ -17,8 +19,8 @@ import android.widget.Toast;
 
 public class MainActivity extends Activity {
 
-	private static final String DOMAIN = "localhost";
-	private static final int PORT = 2000;
+	private static final String DOMAIN = "10.0.2.2";
+	private static final int PORT = 5100;
 	
 	private Socket socket;
 	private static DataInputStream in;
@@ -123,36 +125,36 @@ public class MainActivity extends Activity {
 		// send command to server
 		if (connected) {
 			try {
+				String command = null;
 				switch(v.getId()) {
 				case R.id.buttonTakePicture:
-					out.writeUTF(TAKE_PICTURE);
-					out.flush();
+					command = TAKE_PICTURE;
 					break;
 				case R.id.buttonRotateLeft:
-					out.writeUTF(ROTATE_LEFT);
-					out.flush();
+					command = ROTATE_LEFT;
 					break;
 				case R.id.buttonRotateRight:
-					out.writeUTF(ROTATE_RIGHT);
-					out.flush();
+					command = ROTATE_RIGHT;
 					break;
 				case R.id.button1Up:
-					out.writeUTF(FIRST_ARM_UP);
-					out.flush();
+					command = FIRST_ARM_UP;
 					break;
 				case R.id.button1Down:
-					out.writeUTF(FIRST_ARM_DOWN);
-					out.flush();
+					command = FIRST_ARM_DOWN;
 					break;
 				case R.id.button2Up:
-					out.writeUTF(SECOND_ARM_UP);
-					out.flush();
+					command = SECOND_ARM_UP;
 					break;
 				case R.id.button2Down:
-					out.writeUTF(SECOND_ARM_DOWN);
-					out.flush();
+					command = SECOND_ARM_DOWN;
 					break;
 				}
+				// get bytes and send bytes to server
+				byte[] utf8Bytes = command.getBytes("UTF8");
+				out.writeInt(utf8Bytes.length);
+				out.flush();
+				out.write(utf8Bytes);
+				out.flush();
 				System.out.println("CLIENT: sent command to server");
 			} catch (IOException e) {
 				e.printStackTrace();

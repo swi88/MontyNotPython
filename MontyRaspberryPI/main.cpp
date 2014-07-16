@@ -12,11 +12,16 @@ int main(int argc, char *argv[])
 {
 
     QCoreApplication a(argc, argv);
+
+    // start server
     QThread* t = new QThread;
     Server s;
+    // connect server signals to functions
+    QObject::connect(&s, SIGNAL(takePicture()), this, SLOT(takePicture);
     s.listen();
     s.moveToThread(t);
     t->start();
+
     while(1);
     /**
     GPIO* pin17 = new GPIO(17);
@@ -34,4 +39,10 @@ int main(int argc, char *argv[])
      qDebug()<<"main end";
      **/
     return a.exec();
+}
+
+class RemoteListener:
+void takePicture()
+{
+    // todo
 }
