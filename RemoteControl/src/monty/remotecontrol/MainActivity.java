@@ -36,6 +36,9 @@ public class MainActivity extends Activity {
 	private static final String SECOND_ARM_UP = "#SECOND_ARM_UP";
 	private static final String SECOND_ARM_DOWN = "#SECOND_ARM_DOWN";
 	
+	private static final String ZOOM_IN = "#ZOOM_IN";
+	private static final String ZOOM_OUT = "#ZOOM_OUT";
+	
 	private static final String QUIT_COMMAND = "#QUIT_COMMAND";
 	private static final String GET_IMAGE_COMMAND = "#GET_IMAGE_COMMAND";
 	
@@ -160,7 +163,7 @@ public class MainActivity extends Activity {
 				e.printStackTrace();
 				Toast.makeText(this, R.string.server_not_reachable, Toast.LENGTH_SHORT).show();
 			}
-		} else {
+		} else { 
 			Toast.makeText(this, R.string.server_not_connected, Toast.LENGTH_SHORT).show();
 		}
 	}

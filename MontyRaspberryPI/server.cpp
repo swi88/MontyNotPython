@@ -26,9 +26,9 @@ int int_from_bytes(const char * bytes, bool reverse)
     return *(int *)(void *)tmp;
 }
 
-Server::Server() :QObject()
+Server::Server() : QObject()
 {
-    server = new QTcpServer(this);
+    this->server = new QTcpServer(this);
     connect(server, SIGNAL(newConnection()),
     this, SLOT(on_newConnection()));
 }
@@ -68,22 +68,37 @@ void Server::on_readyRead()
     else if(strcmp(message.constData(), TAKE_PICTURE) == 0)
     {
         qDebug() << "SERVER: take picture";
-        emit takePicture();
+        takePicture();
     }
     else if(strcmp(message.constData(), ROTATE_LEFT) == 0)
     {
         qDebug() << "SERVER: rotate left";
-        emit rotateLeft();
+        rotateLeft();
     }
     else if(strcmp(message.constData(), ROTATE_RIGHT) == 0)
     {
         qDebug() << "SERVER: rotate right";
-        emit rotateRight();
+        rotateRight();
     }
     else if(strcmp(message.constData(), FIRST_ARM_UP) == 0)
     {
         qDebug() << "SERVER: first arm up";
     }
+}
+
+void Server::takePicture()
+{
+    // send picture
+}
+
+void Server::rotateLeft()
+{
+
+}
+
+void Server::rotateRight()
+{
+
 }
 
 void Server::sendPicture()

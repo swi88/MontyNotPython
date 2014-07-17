@@ -1,5 +1,4 @@
 #include "server.h"
-
 #include <QCoreApplication>
 #include <QThread>
 
@@ -7,6 +6,7 @@
 #include <hardware/stepper.h>
 #include <unistd.h>
 #include <QDebug>
+#include <montycontrol.h>
 
 int main(int argc, char *argv[])
 {
@@ -16,8 +16,6 @@ int main(int argc, char *argv[])
     // start server
     QThread* t = new QThread;
     Server s;
-    // connect server signals to functions
-    QObject::connect(&s, SIGNAL(takePicture()), this, SLOT(takePicture);
     s.listen();
     s.moveToThread(t);
     t->start();
@@ -39,10 +37,4 @@ int main(int argc, char *argv[])
      qDebug()<<"main end";
      **/
     return a.exec();
-}
-
-class RemoteListener:
-void takePicture()
-{
-    // todo
 }
