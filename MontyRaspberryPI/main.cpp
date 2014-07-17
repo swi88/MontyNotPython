@@ -3,7 +3,6 @@
 
 #include "montycontroller.h"
 #include <QDebug>
-#include <montycontrol.h>
 
 int main(int argc, char *argv[])
 {

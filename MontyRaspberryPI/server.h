@@ -16,9 +16,7 @@ private:
     QTcpServer *server;
     QTcpSocket *socket;
     void sendPicture();
-    void takePicture();
-    void rotateLeft();
-    void rotateRight();
+
 
 private slots:
     void on_newConnection();
@@ -26,7 +24,13 @@ private slots:
     void on_readyRead();
 
 signals:
-
+    void takePicture();
+    void rotateLeft();
+    void rotateRight();
+    void zoomIn();
+    void zoomOut();
+    void armUp();
+    void armDown();
 };
 
 #endif // SERVER_H

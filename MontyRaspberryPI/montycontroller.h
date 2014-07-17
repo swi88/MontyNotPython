@@ -35,6 +35,13 @@ private:
 
 private slots:
     void receiveUltrasonicDistance(double value);
+    void takePicture();
+    void rotateLeft();
+    void rotateRight();
+    void zoomIn();
+    void zoomOut();
+    void armUp();
+    void armDown();
 };
 
 #endif // MONTYCONTROLLER_H

@@ -5,10 +5,10 @@
 static const char* TAKE_PICTURE = "#TAKE_PICTURE";
 static const char* ROTATE_RIGHT = "#ROTATE_RIGHT";
 static const char* ROTATE_LEFT = "#ROTATE_LEFT";
-static const char* FIRST_ARM_UP = "#FIRST_ARM_UP";
-static const char* FIRST_ARM_DOWN = "#FIRST_ARM_DOWN";
-static const char* SECOND_ARM_UP = "#SECOND_ARM_UP";
-static const char* SECOND_ARM_DOWN = "#SECOND_ARM_DOWN";
+static const char* ZOOM_IN = "#ZOOM_IN";
+static const char* ZOOM_OUT = "#ZOOM_OUT";
+static const char* ARM_UP = "#ARM_UP";
+static const char* ARM_DOWN = "#ARM_DOWN";
 static const char* QUIT_COMMAND = "#QUIT_COMMAND";
 static const char* GET_IMAGE_COMMAND = "#GET_IMAGE_COMMAND";
 
@@ -68,37 +68,38 @@ void Server::on_readyRead()
     else if(strcmp(message.constData(), TAKE_PICTURE) == 0)
     {
         qDebug() << "SERVER: take picture";
-        takePicture();
+        emit takePicture();
     }
     else if(strcmp(message.constData(), ROTATE_LEFT) == 0)
     {
         qDebug() << "SERVER: rotate left";
-        rotateLeft();
+        emit rotateLeft();
     }
     else if(strcmp(message.constData(), ROTATE_RIGHT) == 0)
     {
         qDebug() << "SERVER: rotate right";
-        rotateRight();
+        emit rotateRight();
     }
-    else if(strcmp(message.constData(), FIRST_ARM_UP) == 0)
+    else if(strcmp(message.constData(), ZOOM_IN) == 0)
     {
-        qDebug() << "SERVER: first arm up";
+        qDebug() << "SERVER: zoom in";
+        emit zoomIn();
     }
-}
-
-void Server::takePicture()
-{
-    // send picture
-}
-
-void Server::rotateLeft()
-{
-
-}
-
-void Server::rotateRight()
-{
-
+    else if(strcmp(message.constData(), ZOOM_OUT) == 0)
+    {
+        qDebug() << "SERVER: zoom out";
+        emit zoomOut();
+    }
+    else if(strcmp(message.constData(), ARM_UP) == 0)
+    {
+        qDebug() << "SERVER: arm up";
+        emit armUp();
+    }
+    else if(strcmp(message.constData(), ARM_DOWN) == 0)
+    {
+        qDebug() << "SERVER: arm down";
+        emit armDown();
+    }
 }
 
 void Server::sendPicture()
