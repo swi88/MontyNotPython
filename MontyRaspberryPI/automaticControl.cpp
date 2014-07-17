@@ -36,6 +36,12 @@ AutomaticControl::AutomaticControl()
     thread->start();
 }
 
+~AutomaticControl::AutomaticControl()
+{
+	//delete capture object
+	capture.release();
+}
+
 void AutomaticControl::performMovement() {
 	// ggf. eine Soll-Korrektur
 	if((soll & ist) > 0) {
@@ -123,7 +129,7 @@ void AutomaticControl::processVideo() {
 
 	// eigentliche main-Schleife
 	//read input data. ESC or 'q' for quitting
-	while ((char) keyboard != 'q' && (char) keyboard != 27) {
+	while (1) {
 		//read the current frame
 		if (!capture.read(frame)) {
 			cerr << "Unable to read next frame." << endl;
@@ -195,9 +201,6 @@ void AutomaticControl::processVideo() {
 
 			bufIdx = bufIdx == 9 ? 0 : bufIdx + 1;
 
-			rectangle(frame, cv::Point(fxBufHigh, fyBufHigh), cv::Point(lxBufHigh, lyBufHigh),
-					cv::Scalar(255, 0, 0), 5);
-
 			//define movement
 			if(lxBufHigh - fxBufHigh > xSizeThreeFourth) soll = ZOOM_OUT;
 			else if(lyBufHigh > ySizeThreeFourth) soll = MOVE_DOWN;
@@ -232,6 +235,4 @@ void AutomaticControl::processVideo() {
 			}
 		}
 	}
-	//delete capture object
-	capture.release();
 }

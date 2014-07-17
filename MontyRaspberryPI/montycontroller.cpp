@@ -30,12 +30,12 @@ void MontyController::takePicture()
 
 }
 
-void Server::rotateLeft()
+void MontyController::rotateLeft()
 {
 
 }
 
-void Server::rotateRight()
+void MontyController::rotateRight()
 {
 
 }
