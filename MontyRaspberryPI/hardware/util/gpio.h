@@ -18,7 +18,7 @@ public:
     int get_gpionum(); // return the GPIO number associated with the instance of an object
 private:
     int gpionum; // GPIO number
-    FILE *fd;
+    FILE *fd; 
      char fName [128];
      char buf [16] ;
 };

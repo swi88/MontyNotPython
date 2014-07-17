@@ -2,9 +2,8 @@
 #define STEPPER_H
 #include<iostream>
 #include  <vector>
-#include <pthread.h>
 #include <QObject>
-#include "util/gpio.h"
+#include <wiringPi.h>
 using namespace std;
 
 
@@ -15,7 +14,7 @@ class Stepper : public QObject
 {
     Q_OBJECT
 public:
-	Stepper();
+	Stepper(int pin1, int pin2, int pin3, int pin4);
     void clockwise(int steps);
     void counterclockwise(int steps);
 	bool isActive();
@@ -33,7 +32,7 @@ private:
     void sequence8();
 
     const static int TIME_TO_WAIT;
-	vector<GPIO*> gpios;
+    vector<int> gpios;
     int counter;
     QThread* thread;
     bool active;

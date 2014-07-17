@@ -5,6 +5,7 @@
 #include <string> 
 #include <cstring> 
 #include <fstream>
+#include <unistd.h>
 #include <QDebug>
 using namespace std;
 
