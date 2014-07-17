@@ -11,11 +11,11 @@ class Server : public QObject
 public:
     Server();
     void listen();
+    bool sendPicture(string fileName);
 
 private:
     QTcpServer *server;
     QTcpSocket *socket;
-    void sendPicture();
 
 
 private slots:

@@ -102,7 +102,7 @@ void Server::on_readyRead()
     }
 }
 
-void Server::sendPicture()
+bool Server::sendPicture(string fileName)
 {
     // send picture
 }

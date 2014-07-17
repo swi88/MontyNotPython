@@ -5,17 +5,17 @@
     tools:context="${relativePackage}.${activityClass}" >
 
         
-    <Button
+    <ImageButton
         android:id="@+id/buttonTakePicture"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="60pt"
+        android:layout_height="40pt"
         android:layout_centerInParent="true"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
-        android:paddingTop="35dp"
-        android:paddingBottom="35dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
+        android:scaleType="fitCenter"
         android:onClick="onCommand"
+        android:src="@drawable/picture"
         android:text="@string/take_Picture" />
     <LinearLayout
         android:id="@+id/linearRotate"
@@ -23,18 +23,20 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_above="@id/buttonTakePicture">
-        <Button
+        <ImageButton
 	        android:id="@+id/buttonRotateLeft"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
+	        android:layout_width="25pt"
+	        android:layout_height="25pt"
 	        android:onClick="onCommand"
-	        android:text="@string/rotate_left" />
-        <Button
+	        android:scaleType="fitXY"
+	        android:src="@drawable/left" />
+        <ImageButton
 	        android:id="@+id/buttonRotateRight"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
+	        android:layout_width="25pt"
+	        android:layout_height="25pt"
 	        android:onClick="onCommand"
-	        android:text="@string/rotate_right" />
+	        android:scaleType="fitXY"
+	        android:src="@drawable/right" />
     </LinearLayout>
     
      <LinearLayout
@@ -45,28 +47,23 @@
         android:orientation="vertical"
         android:layout_toLeftOf="@id/buttonTakePicture">
 
-        <Button
+        <ImageButton
 	        android:id="@+id/button1Up"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
+	        android:layout_width="20pt"
+	        android:layout_height="20pt"
 	        android:onClick="onCommand"
+	        android:src="@drawable/plus"
+	        android:scaleType="fitXY"
 	        android:text="Oben" />
-        <Button
+        <ImageButton
 	        android:id="@+id/button1Down"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
+	        android:layout_width="20pt"
+	        android:layout_height="20pt"
 	        android:onClick="onCommand"
+	        android:src="@drawable/minus"
+	        android:scaleType="fitXY"
 	        android:text="Unten" />
     </LinearLayout>
-    
-    <TextView
-             android:id="@+id/text1Arm"
-             android:layout_width="wrap_content"
-             android:layout_height="wrap_content"
-             android:layout_alignLeft="@id/linear1Arm"
-             android:layout_marginLeft="5dp"
-             android:layout_above="@id/linear1Arm"
-             android:text="1. Gelenk" />
     
     <LinearLayout
         android:id="@+id/linear2Arm"
@@ -76,26 +73,23 @@
         android:orientation="vertical"
         android:layout_toRightOf="@id/buttonTakePicture">
 
-        <Button
+        <ImageButton
 	        android:id="@+id/button2Up"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
+	        android:layout_width="20pt"
+	        android:layout_height="20pt"
 	        android:onClick="onCommand"
+	        android:scaleType="fitXY"
+	        android:src="@drawable/up"
 	        android:text="Oben" />
-        <Button
+        <ImageButton
 	        android:id="@+id/button2Down"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
+	        android:layout_width="20pt"
+	        android:layout_height="20pt"
 	        android:onClick="onCommand"
+	        android:scaleType="fitXY"
+	        android:src="@drawable/down"
 	        android:text="Unten" />
     </LinearLayout>
     
-    <TextView android:id="@+id/text2Arm"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/linear2Arm"
-        android:layout_marginLeft="5dp"
-        android:layout_above="@+id/linear2Arm"
-        android:text="2. Gelenk"/>
 
 </RelativeLayout>
