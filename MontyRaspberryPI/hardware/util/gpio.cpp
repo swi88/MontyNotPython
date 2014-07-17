@@ -23,7 +23,6 @@ int GPIO::export_gpio()
 
       fprintf (fd, "%d\n", gpionum) ;
       fclose (fd) ;
-
     return 0;
 }
  
@@ -68,7 +67,7 @@ int GPIO::setval_gpio(int val)
  
 string GPIO::getval_gpio(){
     //TODO is buggy
-    int l = 0;
+    int l;
     sprintf (fName, "/sys/class/gpio/gpio%d/value", gpionum) ;
       if ((fd = fopen (fName, "r")) == NULL)
       {

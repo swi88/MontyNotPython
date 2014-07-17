@@ -7,12 +7,12 @@
 #include <QThread>
 #include <unistd.h>
 #include <QDebug>
-const int Stepper::TIME_TO_WAIT =5000;
+const int Stepper::TIME_TO_WAIT = 10;
 /**
  * @brief create a new stepper instance
  * @details init the pins
  */
-Stepper::Stepper(){
+Stepper::Stepper(int pin1, int pin2,int pin3, int pin4){
     thread = new QThread();
     this->moveToThread(thread);
     connect(this, SIGNAL(finished()), thread, SLOT(quit()));
@@ -21,29 +21,15 @@ Stepper::Stepper(){
     counter=0;
     active=false;
     qDebug()<<"init gpio";
-    GPIO* pin17 = new GPIO(17);
-    pin17->export_gpio();
-    pin17->setdir_gpio("out");
-    pin17->setval_gpio(0);
-    gpios.push_back(pin17);
+    gpios.push_back(pin1);
+    gpios.push_back(pin2);
+    gpios.push_back(pin3);
+    gpios.push_back(pin4);
+    digitalWrite(pin1, LOW);
+    digitalWrite(pin2, LOW);
+    digitalWrite(pin3, LOW);
+    digitalWrite(pin4, LOW);
 
-    GPIO* pin10 = new GPIO(10);
-    pin10->export_gpio();
-    pin10->setdir_gpio("out");
-    pin10->setval_gpio(0);
-    gpios.push_back(pin10);
-
-    GPIO* pin21 = new GPIO(27);
-    pin21->export_gpio();
-    pin21->setdir_gpio("out");
-    pin21->setval_gpio(0);
-    gpios.push_back(pin21);
-
-    GPIO* pin22 = new GPIO(22);
-    pin22->export_gpio();
-    pin22->setdir_gpio("out");
-    pin22->setval_gpio(0);
-    gpios.push_back(pin22);
 }
 /**
  * @brief step clockwise
@@ -91,74 +77,73 @@ void Stepper::stop()
 
 void Stepper::sequence1()
 {
-    gpios.at(3)->setval_gpio(1);
-    usleep(TIME_TO_WAIT);
-    gpios.at(3)->setval_gpio(0);
+    digitalWrite(gpios.at(3), HIGH);
+    delay(TIME_TO_WAIT);
+    digitalWrite(gpios.at(3), LOW);
 }
 
 void Stepper::sequence2()
 {
-    gpios.at(3)->setval_gpio(1);
-    gpios.at(2)->setval_gpio(1);
-    usleep(TIME_TO_WAIT);
-    gpios.at(3)->setval_gpio(0);
-    gpios.at(2)->setval_gpio(0);
+    digitalWrite(gpios.at(3), HIGH);
+    digitalWrite(gpios.at(2), HIGH);
+    delay(TIME_TO_WAIT);
+    digitalWrite(gpios.at(3), LOW);
+    digitalWrite(gpios.at(2), LOW);
 
 }
 
 void Stepper::sequence3()
 {
 
-    gpios.at(2)->setval_gpio(1);
-    usleep(TIME_TO_WAIT);
-    gpios.at(2)->setval_gpio(0);
+
+    digitalWrite(gpios.at(2), HIGH);
+    delay(TIME_TO_WAIT);
+    digitalWrite(gpios.at(2), LOW);
 }
 
 void Stepper::sequence4()
 {
-
-    gpios.at(1)->setval_gpio(1);
-    gpios.at(2)->setval_gpio(1);
-    usleep(TIME_TO_WAIT);
-    gpios.at(1)->setval_gpio(0);
-    gpios.at(2)->setval_gpio(0);
-
+    digitalWrite(gpios.at(1), HIGH);
+    digitalWrite(gpios.at(2), HIGH);
+    delay(TIME_TO_WAIT);
+    digitalWrite(gpios.at(1), LOW);
+    digitalWrite(gpios.at(2), LOW);
 }
 
 void Stepper::sequence5()
 {
 
-    gpios.at(1)->setval_gpio(1);
-    usleep(TIME_TO_WAIT);
-    gpios.at(1)->setval_gpio(0);
+    digitalWrite(gpios.at(1), HIGH);
+    delay(TIME_TO_WAIT);
+    digitalWrite(gpios.at(1), LOW);
 }
 
 void Stepper::sequence6()
 {
 
-    gpios.at(0)->setval_gpio(1);
-    gpios.at(1)->setval_gpio(1);
-    usleep(TIME_TO_WAIT);
-    gpios.at(0)->setval_gpio(0);
-    gpios.at(1)->setval_gpio(0);
+    digitalWrite(gpios.at(0), HIGH);
+    digitalWrite(gpios.at(1), HIGH);
+    delay(TIME_TO_WAIT);
+    digitalWrite(gpios.at(0), LOW);
+    digitalWrite(gpios.at(1), LOW);
 }
 
 void Stepper::sequence7()
 {
 
-    gpios.at(0)->setval_gpio(1);
-    usleep(TIME_TO_WAIT);
-    gpios.at(0)->setval_gpio(0);
+    digitalWrite(gpios.at(0), HIGH);
+    delay(TIME_TO_WAIT);
+    digitalWrite(gpios.at(0), LOW);
 }
 
 void Stepper::sequence8()
 {
 
-    gpios.at(3)->setval_gpio(1);
-    gpios.at(0)->setval_gpio(1);
-    usleep(TIME_TO_WAIT);
-    gpios.at(3)->setval_gpio(0);
-    gpios.at(0)->setval_gpio(0);
+    digitalWrite(gpios.at(3), HIGH);
+    digitalWrite(gpios.at(0), HIGH);
+    delay(TIME_TO_WAIT);
+    digitalWrite(gpios.at(3), LOW);
+    digitalWrite(gpios.at(0), LOW);
 }
 /**
  * @brief clockwise, called by thread
@@ -174,7 +159,7 @@ void Stepper::clockwise()
         sequence6();
         sequence7();
         sequence8();
-        //cout << counter<<"\n";
+        cout << counter<<"\n";
     }
     disconnect(thread,SIGNAL(started()),this,SLOT(clockwise()));
     qDebug()<<"end cw";
@@ -192,7 +177,7 @@ void Stepper::counterclockwise()
        sequence5();
        sequence4();
        sequence3();
-       sequence1();
+       sequence2();
        sequence1();
 
         //cout << counter<<"\n";

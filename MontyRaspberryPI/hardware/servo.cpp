@@ -2,21 +2,25 @@
 #include <string>
 Servo::Servo(int pin){
 	this->pin=pin; 
-	fp = fopen("/dev/servoblaster", "w");
- 	if (fp == NULL) 
- 		printf("Error opening file\n");
-	
 }
 Servo::~Servo(){
 	fclose(fp);
 }
 void Servo::setValue(int value){
-	 this->value=value;
-     qDebug()<<"set value of servo "<< pin <<" to "<<value;
-	 std::ostringstream stm ;
-	 stm<<pin<<"="<<value;
-	 fprintf(fp,stm.str().c_str());
-     fflush(fp);
+	 fp = fopen("/dev/servoblaster", "w");
+         if (fp == NULL) 
+                printf("Error opening file\n");
+        qDebug()<<"set value of servo "<< pin <<" to "<<value;
+	fprintf (fp, "%d=%d\n",pin,value) ;
+	fflush(fp);
+	qDebug()<<"wait";
+	sleep(1);
+	if(value>this->value) fprintf (fp, "%d=%d\n",pin,value-2);
+	else fprintf (fp, "%d=%d\n",pin,value+2) ;
+	fclose(fp);
+	qDebug()<<"ready";
+	this->value = value;
+
 }
 
 int Servo::getCurrentAngle()
