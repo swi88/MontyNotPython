@@ -32,12 +32,12 @@ void MontyController::takePicture()
     server->sendPicture(name);
 }
 
-void Server::rotateLeft()
+void MontyController::rotateLeft()
 {
 
 }
 
-void Server::rotateRight()
+void MontyController::rotateRight()
 {
 
 }
