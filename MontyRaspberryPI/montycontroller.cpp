@@ -27,7 +27,9 @@ void MontyController::receiveUltrasonicDistance(double value)
 
 void MontyController::takePicture()
 {
-
+    // send picture back to client
+    string name = "picture.png";
+    server->sendPicture(name);
 }
 
 void Server::rotateLeft()
