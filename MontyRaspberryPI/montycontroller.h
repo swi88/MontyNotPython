@@ -26,19 +26,17 @@ public:
     };
 
 signals:
+	void move(int movementstate);
+	void grab(Mat* picture);
 
 public slots:
 
 
 private:
-    Ultrasonic* ultrasonic;
-    Stepper* stepperRotate;
-    Stepper* stepperZoom;
     Server* server;
     AutomaticControl* automaticControl;
     MovementController* movementController;
     Camera* camera;
-    Servo* servo;
 
 private slots:
     void receiveUltrasonicDistance(double value);
