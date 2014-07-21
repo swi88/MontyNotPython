@@ -8,14 +8,12 @@ class Button: public QObject
     Q_OBJECT
 public:
     Button();
-
-signals:
-    void buttonPressed();
-
+    bool isPressed();
 
 private:
     QThread* thread;
     const static int BUTTON;
+    bool pressed;
 
 private slots:
     void checkButtonState();

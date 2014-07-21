@@ -13,6 +13,7 @@
 #include "hardware/ultrasonic.h"
 #include "hardware/stepper.h"
 #include "hardware/servo.h"
+#include "hardware/button.h"
 
 class MovementController : public QObject
 {
@@ -25,6 +26,8 @@ private:
     Stepper* stepperRotate;
     Stepper* stepperZoom;
     Servo* servo;
+    Button* buttonRotate;
+    Button* buttonZoom;
     int soll;
     int ist;
     int servoAngle;

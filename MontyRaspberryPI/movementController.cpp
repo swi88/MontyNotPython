@@ -10,6 +10,8 @@
 
 MovementController::MovementController()
 {
+	buttonRotate = new Button(2);
+	buttonZoom = new Button(1);
 	wiringPiSetup();
 	soll = HOLD_POSITION;
 	ist = FLEXIBLE_POSITION;
@@ -75,20 +77,36 @@ void MovementController::moveDown()
 
 void MovementController::moveLeft()
 {
-    if(!stepperRotate->isActive()) stepperRotate->counterclockwise(5);
+    if(!stepperRotate->isActive()) {
+    	stepperRotate->counterclockwise(5);
+    	if(buttonRotate->isPressed()) ist |= LEFT_END_REACHED;
+    	else ist &= ROTATION_RESET_MASK;
+    }
 }
 
 void MovementController::moveRight()
 {
-	if(!stepperRotate->isActive()) stepperRotate->clockwise(5);
+	if(!stepperRotate->isActive()) {
+		stepperRotate->clockwise(5);
+    	if(buttonRotate->isPressed()) ist |= RIGHT_END_REACHED;
+    	else ist &= ROTATION_RESET_MASK;
+	}
 }
 
 void MovementController::zoomIn()
 {
-	if(!stepperZoom->isActive()) stepperZoom->clockwise(5);
+	if(!stepperZoom->isActive()) {
+		stepperZoom->clockwise(5);
+    	if(buttonZoom->isPressed()) ist |= ZOOM_IN_POSITION;
+    	else ist &= ZOOM_RESET_MASK;
+	}
 }
 
 void MovementController::zoomOut()
 {
-	if(!stepperZoom->isActive()) stepperZoom->counterclockwise(5);
+	if(!stepperZoom->isActive()) {
+		stepperZoom->counterclockwise(5);
+    	if(buttonZoom->isPressed()) ist |= ZOOM_OUT_POSITION;
+    	else ist &= ZOOM_RESET_MASK;
+	}
 }
