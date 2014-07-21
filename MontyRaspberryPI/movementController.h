@@ -10,9 +10,9 @@
 
 #include <QObject>
 #include <wiringPi.h>
-#include "ultrasonic.h"
-#include "stepper.h"
-#include "servo.h"
+#include "hardware/ultrasonic.h"
+#include "hardware/stepper.h"
+#include "hardware/servo.h"
 
 class MovementController : public QObject
 {
