@@ -19,27 +19,32 @@ MovementController::MovementController()
 	servo = new Servo(2);
     thread = new QThread();
     this->moveToThread(thread);
-    connect(ultrasonic,SIGNAL(receiveDistance(double)),this,SLOT(receiveUltrasonicDistance(double)));
     connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
     thread->start();
     servoAngle = servo->getCurrentAngle();
 }
 
 void MovementController::performMovement(int movementState) {
+	int distance;
 	soll = movementState;
 	servoAngle = servo->getCurrentAngle();
+	// ist-Wert aktualisieren
 	if(servoAngle >= 45) ist |= LOWER_END_REACHED;
 	else if(servoAngle <= -45) ist |= UPPER_END_REACHED;
 	else {
 		if((ist & LOWER_END_REACHED) != 0) ist -= LOWER_END_REACHED;
 		if((ist & UPPER_END_REACHED) != 0) ist -= UPPER_END_REACHED;
 	}
-	// ggf. eine Soll-Korrektur
+	// falls Grenzwert für die Bewegung bereits erreicht..
 	if((soll & ist) > 0) {
-		// TODO Ultraschallsensor auslesen und in Soll-Korrektur einfließen lassen
 		if(soll == MOVE_UP && (ist & ZOOM_OUT_POSITION) == 0 ) soll = ZOOM_OUT;
 		else if(soll == MOVE_DOWN && (ist & ZOOM_IN_POSITION) == 0) soll = ZOOM_IN;
 		else soll = HOLD_POSITION;
+	}
+	// Falls Hindernis vor dem Ultraschallsensor erkannt..
+	if(soll == HOLD_POSITION) {
+		distance = ultrasonic->getDistance();
+		if((ist & ZOOM_OUT_POSITION) == 0 && distance < 15) soll = ZOOM_OUT;
 	}
 	switch(soll) {
 	case MOVE_UP: moveUp();
