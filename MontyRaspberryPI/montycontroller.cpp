@@ -1,10 +1,4 @@
 #include "montycontroller.h"
-#include "movementstates.h"
-#include <QDebug>
-#include <opencv2/highgui/highgui.hpp>
-#include "hardware/util/ledstate.h"
-#include <ctime>
-#include <QDebug>
 
 MontyController::MontyController()
 {
@@ -22,7 +16,7 @@ MontyController::MontyController()
     camera = new Camera();
     automaticControl = new AutomaticControl();
     movementController = new MovementController();
-    connect(camera, SIGNAL(update(Mat*)), automaticControl, SLOT(update(Mat*)));
+    connect(camera, SIGNAL(update(Mat)), automaticControl, SLOT(update(Mat)));
     connect(this, SIGNAL(startAutomatic()), camera, SLOT(startAutomatic()));
     connect(this, SIGNAL(stopAutomatic()), camera, SLOT(stopAutomatic()));
     connect(this, SIGNAL(grab(Mat*)), camera, SLOT(grab(Mat*)));
@@ -32,6 +26,11 @@ MontyController::MontyController()
     ledController = new LEDController(4,5,6);
     ledController->setMouthLEDState(OFF);
     ledController->setInfoLEDState(CONTROLL_AUTO);
+
+    //start flash controller
+    flashController = new FlashController();
+    connect(flashController,SIGNAL(setFlash(MouthState)),ledController,SLOT(setMouthLEDState(MouthState)));
+    connect(camera,SIGNAL(update(Mat)),flashController,SLOT(checkImage(Mat)));
     qDebug()<<"started";
 }
 

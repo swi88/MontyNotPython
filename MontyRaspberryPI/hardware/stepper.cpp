@@ -13,11 +13,6 @@ const int Stepper::TIME_TO_WAIT = 10;
  * @details init the pins
  */
 Stepper::Stepper(int pin1, int pin2,int pin3, int pin4){
-    thread = new QThread();
-    this->moveToThread(thread);
-    connect(this, SIGNAL(finished()), thread, SLOT(quit()));
-    connect(thread, SIGNAL(finished()), this, SLOT(switchActiveState()));
-    connect(thread, SIGNAL(started()), this, SLOT(switchActiveState()));
     counter=0;
     active=false;
     qDebug()<<"init gpio";
@@ -25,10 +20,20 @@ Stepper::Stepper(int pin1, int pin2,int pin3, int pin4){
     gpios.push_back(pin2);
     gpios.push_back(pin3);
     gpios.push_back(pin4);
+    pinMode(pin1, OUTPUT);
+    pinMode(pin2, OUTPUT);
+    pinMode(pin3, OUTPUT);
+    pinMode(pin4, OUTPUT);
     digitalWrite(pin1, LOW);
     digitalWrite(pin2, LOW);
     digitalWrite(pin3, LOW);
     digitalWrite(pin4, LOW);
+    thread = new QThread();
+    this->moveToThread(thread);
+    connect(this, SIGNAL(finished()), thread, SLOT(quit()));
+    connect(thread, SIGNAL(finished()), this, SLOT(switchActiveState()));
+    connect(thread, SIGNAL(started()), this, SLOT(switchActiveState()));
+
 
 }
 /**
@@ -37,7 +42,8 @@ Stepper::Stepper(int pin1, int pin2,int pin3, int pin4){
  */
 void Stepper::clockwise(int steps){
     if(thread->isRunning()){
-        thread->terminate();
+        //TODO freezing program
+        //thread->terminate();
     }
     //thread->wait();
     this->steps = steps;
@@ -53,7 +59,7 @@ void Stepper::clockwise(int steps){
  */
 void Stepper::counterclockwise(int steps){
     if(thread->isRunning()){
-        thread->terminate();
+        //TODO freezing program
     }
     this->steps = steps;
     connect(thread,SIGNAL(started()),this,SLOT(counterclockwise()));

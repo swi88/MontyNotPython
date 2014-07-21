@@ -11,7 +11,8 @@ using namespace std;
 
 Camera::Camera()
 {
-    //capture(0);
+    capture(0);
+    capture.set( CV_CAP_PROP_FORMAT, CV_8UC3 );
 	end = true;
     thread = new QThread();
     this->moveToThread(thread);
@@ -33,12 +34,10 @@ void Camera::startAutomatic()
 {
 	end = false;
 	while(!end)
-	{
-		//read the current frame
-		if (!capture.read(frame)) {
-			cerr << "Unable to read next frame." << endl;
-			continue;
-		} else emit update(frame);
+    {
+        capture.grab();
+        capture.retrieve ( frame);
+        emit update(frame);
 	}
 }
 
@@ -49,7 +48,12 @@ void Camera::stopAutomatic()
 
 void Camera::grab(Mat* picture)
 {
+    capture.grab();
+    capture.retrieve ( frame);
+    picture = &frame;
+    /**
 	if (!capture.read(frame)) {
 		cerr << "Unable to read next frame." << endl;
 	} else picture = &frame;
+    **/
 }

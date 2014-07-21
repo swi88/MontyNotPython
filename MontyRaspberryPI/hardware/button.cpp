@@ -26,7 +26,8 @@ void Button::checkButtonState()
         if(!(digitalRead(pin) == pressed)){
             pressed = !pressed;
         }
-        wait(100);
+
+        delay(100);
     }
 }
 

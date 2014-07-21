@@ -8,7 +8,13 @@
 #include "hardware/camera.h"
 #include "hardware/ledcontroller.h"
 #include <opencv/cv.hpp>
-
+#include "flashcontroller.h"
+#include "movementstates.h"
+#include <QDebug>
+#include <opencv2/highgui/highgui.hpp>
+#include "hardware/util/ledstate.h"
+#include <ctime>
+#include <QDebug>
 using namespace cv;
 
 class MontyController : public QObject
@@ -32,6 +38,7 @@ private:
     AutomaticControl* automaticControl;
     MovementController* movementController;
     LEDController* ledController;
+    FlashController* flashController;
     Camera* camera;
 
 private slots:

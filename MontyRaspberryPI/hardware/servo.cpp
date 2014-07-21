@@ -47,3 +47,8 @@ void Servo::changeAngle(int degree)
 {
     setValue(degree*(190.0/180.0)*value);
 }
+
+void Servo::setAngle(int degree)
+{
+    setValue(degree*(190.0/180.0));
+}
