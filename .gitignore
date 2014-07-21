@@ -8,6 +8,7 @@ Default/
 *.pro
 *.user
 *.xml
+R.java
 
 # Compiled Object files
 *.slo

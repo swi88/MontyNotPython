@@ -22,10 +22,18 @@ MovementController::MovementController()
     connect(ultrasonic,SIGNAL(receiveDistance(double)),this,SLOT(receiveUltrasonicDistance(double)));
     connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
     thread->start();
+    servoAngle = servo->getCurrentAngle();
 }
 
 void MovementController::performMovement(int movementState) {
 	soll = movementState;
+	servoAngle = servo->getCurrentAngle();
+	if(servoAngle >= 45) ist |= LOWER_END_REACHED;
+	else if(servoAngle <= -45) ist |= UPPER_END_REACHED;
+	else {
+		if((ist & LOWER_END_REACHED) != 0) ist -= LOWER_END_REACHED;
+		if((ist & UPPER_END_REACHED) != 0) ist -= UPPER_END_REACHED;
+	}
 	// ggf. eine Soll-Korrektur
 	if((soll & ist) > 0) {
 		// TODO Ultraschallsensor auslesen und in Soll-Korrektur einfließen lassen
@@ -47,10 +55,38 @@ void MovementController::performMovement(int movementState) {
 	case ZOOM_OUT: zoomOut();
 	break;
 	}
-	// TODO Aktorik-Befehle und Ist-Wert-Festlegung)
 }
 
 void MovementController::moveUp()
 {
+	servo->setValue(servoAngle - 2);
+	servo->setValue(servoAngle - 1);
+	servoAngle = servo->getCurrentAngle();
+}
 
+void MovementController::moveDown()
+{
+	servo->setValue(servoAngle + 2);
+	servo->setValue(servoAngle + 1);
+	servoAngle = servo->getCurrentAngle();
+}
+
+void MovementController::moveLeft()
+{
+	if(!stepperRotate->isActive()) stepperRotate->counterclockwise(5);
+}
+
+void MovementController::moveRight()
+{
+	if(!stepperRotate->isActive()) stepperRotate->clockwise(5);
+}
+
+void MovementController::zoomIn()
+{
+	if(!stepperZoom->isActive()) stepperZoom->clockwise(5);
+}
+
+void MovementController::zoomOut()
+{
+	if(!stepperZoom->isActive()) stepperZoom->counterclockwise(5);
 }

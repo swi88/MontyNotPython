@@ -23,6 +23,7 @@ private:
     Servo* servo;
     int soll;
     int ist;
+    int servoAngle;
     void moveUp(void);
     void moveDown(void);
     void moveLeft(void);
