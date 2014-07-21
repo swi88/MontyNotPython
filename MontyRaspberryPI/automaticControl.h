@@ -18,7 +18,7 @@ class AutomaticControl : public QObject
 	Q_OBJECT
 public:
 	AutomaticControl();
-	signals:
+signals:
 	void move(int movementState);
 	void savePicture(Mat picture);
 private:

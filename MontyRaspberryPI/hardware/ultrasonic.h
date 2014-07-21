@@ -16,10 +16,14 @@ signals:
 private:
     QThread* thread;
     double meassureDistance();
+    double median(double*, int length, int index);
     double distance;
+    double distances[8];
+    int actIndex;
 
     const static int TRIG;
     const static int ECHO;
+    const static int NUMBER_OF_MEASSURES;
 
 private slots:
 

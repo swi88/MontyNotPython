@@ -9,7 +9,10 @@
 #define MOVEMENTCONTROLLER_H_
 
 #include <QObject>
-#include <hardware/servo.h>
+#include <wiringPi.h>
+#include "ultrasonic.h"
+#include "stepper.h"
+#include "servo.h"
 
 class MovementController : public QObject
 {
@@ -24,6 +27,7 @@ private:
     Servo* servo;
     int soll;
     int ist;
+    int servoAngle;
     void moveUp(void);
     void moveDown(void);
     void moveLeft(void);

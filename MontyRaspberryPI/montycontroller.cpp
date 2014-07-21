@@ -4,7 +4,9 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <ctime>
 
-MontyController::MontyController(){
+MontyController::MontyController()
+{
+	infoState = CONTROLL_MANUAL;
     server = new Server();
     connect(server,SIGNAL(takePicture()),this,SLOT(takePicture()));
     connect(server,SIGNAL(rotateLeft()),this,SLOT(rotateLeft()));
@@ -23,7 +25,19 @@ MontyController::MontyController(){
     connect(this, SIGNAL(stopAutomatic()), camera, SLOT(stopAutomatic()));
     connect(this, SIGNAL(grab(Mat*)), camera, SLOT(grab(Mat*)));
     connect(automaticControl, SIGNAL(move(int)), movementController, SLOT(performMovement(int)));
-    connect(this, SIGNAL(move(int)), movementController, SLOT(performMovement(performMovement(int))));
+    connect(this, SIGNAL(move(int)), movementController, SLOT(performMovement(int)));
+}
+
+void MontyController::autoControl()
+{
+	this->infoState = CONTROLL_AUTO;
+	emit startAutomatic();
+}
+
+void MontyController::stopAutoControl()
+{
+	this->infoState = CONTROLL_MANUAL;
+	emit stopAutomatic();
 }
 
 void MontyController::receiveUltrasonicDistance(double value)
@@ -49,6 +63,7 @@ void MontyController::savePicture(Mat picture)
     strftime (nameBuffer,80,"picture_%F_%T.png",timeinfo);
 
     imwrite(nameBuffer, picture);
+    
     // send picture back to client
     const char* name = "picture.png";
     server->sendPicture(QString::fromLatin1(name));

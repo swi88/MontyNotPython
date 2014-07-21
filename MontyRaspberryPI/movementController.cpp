@@ -19,19 +19,29 @@ MovementController::MovementController()
 	servo = new Servo(2);
     thread = new QThread();
     this->moveToThread(thread);
-    connect(ultrasonic,SIGNAL(receiveDistance(double)),this,SLOT(receiveUltrasonicDistance(double)));
     connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
     thread->start();
+    servoAngle = servo->getCurrentAngle();
 }
 
 void MovementController::performMovement(int movementState) {
+	int distance;
 	soll = movementState;
-	// ggf. eine Soll-Korrektur
+	servoAngle = servo->getCurrentAngle();
+	// ist-Wert aktualisieren
+	if(servoAngle >= 45) ist |= LOWER_END_REACHED;
+	else if(servoAngle <= -45) ist |= UPPER_END_REACHED;
+	else ist &= SERVO_RESET_MASK;
+	// falls Grenzwert für die Bewegung bereits erreicht..
 	if((soll & ist) > 0) {
-		// TODO Ultraschallsensor auslesen und in Soll-Korrektur einfließen lassen
 		if(soll == MOVE_UP && (ist & ZOOM_OUT_POSITION) == 0 ) soll = ZOOM_OUT;
 		else if(soll == MOVE_DOWN && (ist & ZOOM_IN_POSITION) == 0) soll = ZOOM_IN;
 		else soll = HOLD_POSITION;
+	}
+	// Falls Hindernis vor dem Ultraschallsensor erkannt..
+	if(soll == HOLD_POSITION) {
+		distance = ultrasonic->getDistance();
+		if((ist & ZOOM_OUT_POSITION) == 0 && distance < 15) soll = ZOOM_OUT;
 	}
 	switch(soll) {
 	case MOVE_UP: moveUp();
@@ -47,10 +57,38 @@ void MovementController::performMovement(int movementState) {
 	case ZOOM_OUT: zoomOut();
 	break;
 	}
-	// TODO Aktorik-Befehle und Ist-Wert-Festlegung)
 }
 
 void MovementController::moveUp()
 {
+	servo->setValue(servoAngle - 2);
+	servo->setValue(servoAngle - 1);
+	servoAngle = servo->getCurrentAngle();
+}
 
+void MovementController::moveDown()
+{
+	servo->setValue(servoAngle + 2);
+	servo->setValue(servoAngle + 1);
+	servoAngle = servo->getCurrentAngle();
+}
+
+void MovementController::moveLeft()
+{
+	if(!stepperRotate->isActive()) stepperRotate->counterclockwise(5);
+}
+
+void MovementController::moveRight()
+{
+	if(!stepperRotate->isActive()) stepperRotate->clockwise(5);
+}
+
+void MovementController::zoomIn()
+{
+	if(!stepperZoom->isActive()) stepperZoom->clockwise(5);
+}
+
+void MovementController::zoomOut()
+{
+	if(!stepperZoom->isActive()) stepperZoom->counterclockwise(5);
 }

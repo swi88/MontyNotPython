@@ -2,13 +2,11 @@
 #define MONTYCONTROLLER_H
 
 #include <QObject>
-#include "hardware/ultrasonic.h"
-#include "hardware/stepper.h"
 #include "server.h"
+#include "automaticControl.h"
+#include "movementController.h"
+#include "hardware/camera.h"
 #include <opencv/cv.hpp>
-#include <movementController.h>
-#include <automaticControl.h>
-#include <hardware/camera.h>
 
 using namespace cv;
 
@@ -29,6 +27,8 @@ public:
     };
 
 signals:
+	void startAutomatic(void);
+	void stopAutomatic(void);
 	void move(int movementstate);
 	void grab(Mat* picture);
 
@@ -36,6 +36,7 @@ public slots:
 
 
 private:
+	int infoState;
     Server* server;
     AutomaticControl* automaticControl;
     MovementController* movementController;
@@ -51,6 +52,8 @@ private slots:
     void zoomOut();
     void armUp();
     void armDown();
+    void autoControl();
+    void stopAutoControl();
 };
 
 #endif // MONTYCONTROLLER_H
