@@ -31,10 +31,7 @@ void MovementController::performMovement(int movementState) {
 	// ist-Wert aktualisieren
 	if(servoAngle >= 45) ist |= LOWER_END_REACHED;
 	else if(servoAngle <= -45) ist |= UPPER_END_REACHED;
-	else {
-		if((ist & LOWER_END_REACHED) != 0) ist -= LOWER_END_REACHED;
-		if((ist & UPPER_END_REACHED) != 0) ist -= UPPER_END_REACHED;
-	}
+	else ist &= SERVO_RESET_MASK;
 	// falls Grenzwert für die Bewegung bereits erreicht..
 	if((soll & ist) > 0) {
 		if(soll == MOVE_UP && (ist & ZOOM_OUT_POSITION) == 0 ) soll = ZOOM_OUT;
