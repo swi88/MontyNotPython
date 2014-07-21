@@ -59,6 +59,11 @@ void Stepper::counterclockwise(int steps){
     connect(thread,SIGNAL(started()),this,SLOT(counterclockwise()));
     thread->start();
 }
+
+bool Stepper::isActive()
+{
+    return active;
+}
 /**
  * @brief wait for thread
  * @return thread is terminated

@@ -5,17 +5,17 @@
 #include <wiringPi.h>
 #include <sr595.h>
 #include <wiringShift.h>
-#include "montycontroller.h"
+#include "hardware/util/ledstate.h"
 
 class LEDController : public QObject
 {
     Q_OBJECT
 public:
-    explicit LEDController(int dataPin, int clockPin, int latchPin, int outputEnable);
+    explicit LEDController(int dataPin, int clockPin, int latchPin);
 
     void setStartAnimation();
-    void setMouthLEDState(MontyController::MounthState state);
-    void setInfoLEDState(MontyController::InfoState state);
+    void setMouthLEDState(MounthState state);
+    void setInfoLEDState(InfoState state);
 
 signals:
 
@@ -29,11 +29,12 @@ private:
     int pinData;
     int pinBase;
     int pinNumbers;
-
+    InfoState controllModeCurrent;
 
     int codeInfoCurrent;
     int codeMouthCurrent;
 
+    void setLEDs();
     void writeToRegisters(int value);
 };
 

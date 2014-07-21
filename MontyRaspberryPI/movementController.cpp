@@ -75,7 +75,7 @@ void MovementController::moveDown()
 
 void MovementController::moveLeft()
 {
-	if(!stepperRotate->isActive()) stepperRotate->counterclockwise(5);
+    if(!stepperRotate->isActive()) stepperRotate->counterclockwise(5);
 }
 
 void MovementController::moveRight()

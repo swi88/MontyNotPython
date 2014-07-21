@@ -8,6 +8,7 @@
 #ifndef AUTOMATICCONTROL_H_
 #define AUTOMATICCONTROL_H_
 
+#include <opencv2/video/background_segm.hpp>
 #include <QObject>
 #include <opencv/cv.hpp>
 

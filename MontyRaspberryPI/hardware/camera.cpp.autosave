@@ -11,7 +11,7 @@ using namespace std;
 
 Camera::Camera()
 {
-    //capture(0);
+    capture(0);
 	end = true;
     thread = new QThread();
     this->moveToThread(thread);
