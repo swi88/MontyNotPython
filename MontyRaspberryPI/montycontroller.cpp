@@ -2,7 +2,9 @@
 #include "movementstates.h"
 #include <QDebug>
 #include <opencv2/highgui/highgui.hpp>
+#include "hardware/util/ledstate.h"
 #include <ctime>
+#include <QDebug>
 
 MontyController::MontyController()
 {
@@ -26,6 +28,11 @@ MontyController::MontyController()
     connect(this, SIGNAL(grab(Mat*)), camera, SLOT(grab(Mat*)));
     connect(automaticControl, SIGNAL(move(int)), movementController, SLOT(performMovement(int)));
     connect(this, SIGNAL(move(int)), movementController, SLOT(performMovement(int)));
+    //LED Controller at Pin 23,24,25 (wiring pi pins 4,5,6)
+    ledController = new LEDController(4,5,6);
+    ledController->setMouthLEDState(OFF);
+    ledController->setInfoLEDState(CONTROLL_AUTO);
+    qDebug()<<"started";
 }
 
 void MontyController::autoControl()

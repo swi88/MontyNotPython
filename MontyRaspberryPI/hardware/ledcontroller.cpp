@@ -60,7 +60,7 @@ void LEDController::setInfoLEDState(InfoState state)
     }
 }
 
-void LEDController::setMouthLEDState(MounthState state)
+void LEDController::setMouthLEDState(MouthState state)
 {
     switch (state) {
     case FLASH_ON:{

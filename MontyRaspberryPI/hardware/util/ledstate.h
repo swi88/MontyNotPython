@@ -6,7 +6,7 @@ enum InfoState{
     CONTROLL_MANUAL,
     TAKE_PHOTO
 };
-enum MounthState{
+enum MouthState{
     FLASH_ON,
     OFF,
     START_ANIMATION

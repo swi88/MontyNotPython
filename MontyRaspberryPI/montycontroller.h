@@ -6,6 +6,7 @@
 #include "automaticControl.h"
 #include "movementController.h"
 #include "hardware/camera.h"
+#include "hardware/ledcontroller.h"
 #include <opencv/cv.hpp>
 
 using namespace cv;
@@ -15,16 +16,6 @@ class MontyController : public QObject
     Q_OBJECT
 public:
     explicit MontyController();
-    enum InfoState{
-        CONTROLL_AUTO,
-        CONTROLL_MANUAL,
-        TAKE_PHOTO
-    };
-    enum MounthState{
-        FLASH_ON,
-        OFF,
-        START_ANIMATION
-    };
 
 signals:
 	void startAutomatic(void);
@@ -40,6 +31,7 @@ private:
     Server* server;
     AutomaticControl* automaticControl;
     MovementController* movementController;
+    LEDController* ledController;
     Camera* camera;
 
 private slots:

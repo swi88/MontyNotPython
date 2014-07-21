@@ -14,7 +14,7 @@ public:
     explicit LEDController(int dataPin, int clockPin, int latchPin);
 
     void setStartAnimation();
-    void setMouthLEDState(MounthState state);
+    void setMouthLEDState(MouthState state);
     void setInfoLEDState(InfoState state);
 
 signals:
