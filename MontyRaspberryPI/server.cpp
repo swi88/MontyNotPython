@@ -1,6 +1,8 @@
 #include "server.h"
 #include <cstdio>
 #include <QtDebug>
+#include <QtCore/QFile>
+#include <QString>
 
 static const char* TAKE_PICTURE = "#TAKE_PICTURE";
 static const char* ROTATE_RIGHT = "#ROTATE_RIGHT";
@@ -55,14 +57,17 @@ void Server::on_newConnection()
 }
 
 void Server::on_readyRead()
-{   qDebug() << "read input";
-    QByteArray tlength = socket->read(4); // read int32
+{
+    qDebug() << "read input";
+    QByteArray tlength = socket->read(2); // read int32
     int length = int_from_bytes(tlength.data(), true);
     QByteArray message = socket->read(length);
 
     if(strcmp(message.constData(), QUIT_COMMAND) == 0)
     {
         qDebug() << "SERVER: disconnect from host";
+        socket->write(QUIT_COMMAND);
+        socket->flush();
         socket->disconnectFromHost();
     }
     else if(strcmp(message.constData(), TAKE_PICTURE) == 0)
@@ -102,9 +107,23 @@ void Server::on_readyRead()
     }
 }
 
-bool Server::sendPicture(string fileName)
+bool Server::sendPicture(QString fileName)
 {
     // send picture
+    QFile file(fileName);
+    if (!file.open(QIODevice::ReadOnly))
+    {
+        qDebug()<<"Can't open image.";
+        return 0;
+    }
+
+    QByteArray image;
+    while (!file.atEnd()) {
+        image.append(file.readLine());
+    }
+    socket->write(GET_IMAGE_COMMAND);
+    socket->write(image);
+    socket->flush();
 }
 
 void Server::on_disconnected()
@@ -113,4 +132,24 @@ void Server::on_disconnected()
     disconnect(socket, SIGNAL(disconnected()));
     disconnect(socket, SIGNAL(readyRead()));
     socket->deleteLater();
+}
+
+void Server::testMethode()
+{
+    // test
+    qDebug()<<"Testmethode";
+    char bytes[4];
+    int n = 5;
+
+    bytes[0] = (n >> 24) & 0xFF;
+    bytes[1] = (n >> 16) & 0xFF;
+    bytes[2] = (n >> 8) & 0xFF;
+    bytes[3] = n & 0xFF;
+
+    socket->write(bytes);
+    socket->waitForBytesWritten();
+    socket->write("#TEST");
+    socket->waitForBytesWritten();
+    socket->flush();
+    qDebug()<<"Data written";
 }

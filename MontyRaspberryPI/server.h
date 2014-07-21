@@ -1,6 +1,7 @@
 #include <QObject>
 #include <QTcpServer>
 #include <QTcpSocket>
+#include <QString>
 
 #ifndef SERVER_H
 #define SERVER_H
@@ -11,7 +12,8 @@ class Server : public QObject
 public:
     Server();
     void listen();
-    bool sendPicture(string fileName);
+    bool sendPicture(QString fileName);
+    void testMethode();
 
 private:
     QTcpServer *server;

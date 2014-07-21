@@ -6,6 +6,7 @@ import java.io.DataOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.math.BigInteger;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
@@ -31,10 +32,8 @@ public class MainActivity extends Activity {
 	private static final String TAKE_PICTURE = "#TAKE_PICTURE";
 	private static final String ROTATE_RIGHT = "#ROTATE_RIGHT";
 	private static final String ROTATE_LEFT = "#ROTATE_LEFT";
-	private static final String FIRST_ARM_UP = "#FIRST_ARM_UP";
-	private static final String FIRST_ARM_DOWN = "#FIRST_ARM_DOWN";
-	private static final String SECOND_ARM_UP = "#SECOND_ARM_UP";
-	private static final String SECOND_ARM_DOWN = "#SECOND_ARM_DOWN";
+	private static final String ARM_UP = "#ARM_UP";
+	private static final String ARM_DOWN = "#ARM_DOWN";
 	
 	private static final String ZOOM_IN = "#ZOOM_IN";
 	private static final String ZOOM_OUT = "#ZOOM_OUT";
@@ -64,8 +63,18 @@ public class MainActivity extends Activity {
 				String command = "";
 				while (!command.equals(QUIT_COMMAND)) {
 					try {
-						command = in.readUTF();
-						if (command.equals(GET_IMAGE_COMMAND)) {
+						System.out.println("1");
+//						byte[] bytes = new byte[4];
+//						in.read(bytes);
+						int length = in.readInt();
+//						String lengthStr = new String(bytes);
+//						int length = Integer.parseInt(lengthStr);
+						System.out.println("Length: " + length);
+						byte[] commandBytes = new byte[length];
+						in.read(commandBytes);
+						command = new String(commandBytes);
+						System.out.println(command);
+						if (command.equals(GET_IMAGE_COMMAND)) { 
 							// Receive Image and write it to the harddrive
 							final String fName = in.readUTF();
 							byte[] byteArray = new byte[10240];
@@ -89,6 +98,14 @@ public class MainActivity extends Activity {
 								@Override
 								public void run() {
 									Toast.makeText(MainActivity.this, "Server disconnected", Toast.LENGTH_SHORT).show();		
+								}
+							});
+						} else if (command.equals("#TEST")) {
+							System.out.println("CLIENT: TEST");
+							runOnUiThread(new Runnable() {
+								@Override
+								public void run() {
+									Toast.makeText(MainActivity.this, "TEST", Toast.LENGTH_SHORT).show();		
 								}
 							});
 						}
@@ -140,16 +157,16 @@ public class MainActivity extends Activity {
 					command = ROTATE_RIGHT;
 					break;
 				case R.id.button1Up:
-					command = FIRST_ARM_UP;
+					command = ZOOM_OUT;
 					break;
 				case R.id.button1Down:
-					command = FIRST_ARM_DOWN;
+					command = ZOOM_IN;
 					break;
 				case R.id.button2Up:
-					command = SECOND_ARM_UP;
+					command = ARM_UP;
 					break;
 				case R.id.button2Down:
-					command = SECOND_ARM_DOWN;
+					command = ARM_DOWN;
 					break;
 				}
 				// get bytes and send bytes to server
@@ -162,9 +179,21 @@ public class MainActivity extends Activity {
 			} catch (IOException e) {
 				e.printStackTrace();
 				Toast.makeText(this, R.string.server_not_reachable, Toast.LENGTH_SHORT).show();
+				// try to reconnect
+				if (connect()) {
+					Toast.makeText(this, "Verbinde mit Server", Toast.LENGTH_SHORT).show();
+				} else {
+					Toast.makeText(this, "Verbindungsversuch fehlgeschlagen!", Toast.LENGTH_SHORT).show();
+				}
 			}
-		} else { 
+		} else {
 			Toast.makeText(this, R.string.server_not_connected, Toast.LENGTH_SHORT).show();
+			// try to reconnect
+			if (connect()) {
+				Toast.makeText(this, "Verbinde mit Server", Toast.LENGTH_SHORT).show();
+			} else {
+				Toast.makeText(this, "Verbindungsversuch fehlgeschlagen!", Toast.LENGTH_SHORT).show();
+			}
 		}
 	}
 	

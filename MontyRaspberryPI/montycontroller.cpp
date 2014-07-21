@@ -28,13 +28,13 @@ void MontyController::receiveUltrasonicDistance(double value)
 void MontyController::takePicture()
 {
     // send picture back to client
-    string name = "picture.png";
-    server->sendPicture(name);
+    const char* name = "picture.png";
+    server->sendPicture(QString::fromLatin1(name));
 }
 
 void MontyController::rotateLeft()
 {
-
+    server->testMethode();
 }
 
 void MontyController::rotateRight()
