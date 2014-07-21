@@ -5,6 +5,9 @@
 #include "hardware/ultrasonic.h"
 #include "hardware/stepper.h"
 #include "server.h"
+#include <opencv/cv.hpp>
+
+using namespace cv;
 
 class MontyController : public QObject
 {
@@ -23,19 +26,22 @@ public:
     };
 
 signals:
+	void move(int movementstate);
+	void grab(Mat* picture);
 
 public slots:
 
 
 private:
-    Ultrasonic* ultrasonic;
-    Stepper* stepperRotate;
-    Stepper* stepperZoom;
     Server* server;
+    AutomaticControl* automaticControl;
+    MovementController* movementController;
+    Camera* camera;
 
 private slots:
     void receiveUltrasonicDistance(double value);
     void takePicture();
+    void savePicture(Mat picture);
     void rotateLeft();
     void rotateRight();
     void zoomIn();
