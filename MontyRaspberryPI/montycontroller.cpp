@@ -2,6 +2,7 @@
 #include "movementstates.h"
 #include <QDebug>
 #include <opencv2/highgui/highgui.hpp>
+#include <ctime>
 
 MontyController::MontyController(){
     server = new Server();
@@ -39,7 +40,15 @@ void MontyController::takePicture()
 
 void MontyController::savePicture(Mat picture)
 {
-	imwrite("picture.png", picture);
+    // get current timestamp
+    time_t rawtime;
+    struct tm * timeinfo;
+    char nameBuffer [80];
+    time (&rawtime);
+    timeinfo = localtime (&rawtime);
+    strftime (nameBuffer,80,"picture_%F_%T.png",timeinfo);
+
+    imwrite(nameBuffer, picture);
     // send picture back to client
     const char* name = "picture.png";
     server->sendPicture(QString::fromLatin1(name));

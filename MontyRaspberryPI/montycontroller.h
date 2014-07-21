@@ -6,6 +6,9 @@
 #include "hardware/stepper.h"
 #include "server.h"
 #include <opencv/cv.hpp>
+#include <movementController.h>
+#include <automaticControl.h>
+#include <hardware/camera.h>
 
 using namespace cv;
 

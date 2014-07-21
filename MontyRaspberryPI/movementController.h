@@ -9,6 +9,7 @@
 #define MOVEMENTCONTROLLER_H_
 
 #include <QObject>
+#include <hardware/servo.h>
 
 class MovementController : public QObject
 {
