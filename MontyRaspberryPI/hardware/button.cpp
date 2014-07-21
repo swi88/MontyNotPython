@@ -5,12 +5,14 @@
 
 
 
-const int Button::BUTTON= 11; //(GPIO Pin 7)
-Button::Button()
+const int Button::ZOOM_BUTTON = 11; //(GPIO Pin 7)
+const int Button::ROTATE_BUTTON = 13;
+Button::Button(int pin)
 {
 	pressed = false;
-    pinMode(BUTTON, INPUT);
-    pullUpDnControl(BUTTON,PUD_DOWN);
+	this->pin = pin;
+    pinMode(this->pin, INPUT);
+    pullUpDnControl(this->pin,PUD_DOWN);
     thread = new QThread();
     this->moveToThread(thread);
     connect(thread, SIGNAL(started()), this, SLOT(checkButtonState()));
@@ -21,7 +23,7 @@ Button::Button()
 void Button::checkButtonState()
 {
     while (1) {
-        if(!(digitalRead(BUTTON) == pressed)){
+        if(!(digitalRead(pin) == pressed)){
             pressed = !pressed;
         }
         wait(100);
