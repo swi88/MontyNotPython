@@ -8,12 +8,12 @@
 const int Button::BUTTON= 11; //(GPIO Pin 7)
 Button::Button()
 {
-
+	pressed = false;
     pinMode(BUTTON, INPUT);
     pullUpDnControl(BUTTON,PUD_DOWN);
     thread = new QThread();
     this->moveToThread(thread);
-    connect(thread,SIGNAL(started()),this,SLOT(checkButtonState()));
+    connect(thread, SIGNAL(started()), this, SLOT(checkButtonState()));
     connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
     thread->start();
 }
@@ -21,8 +21,14 @@ Button::Button()
 void Button::checkButtonState()
 {
     while (1) {
-        if(digitalRead(BUTTON)==1){
-            emit buttonPressed();
+        if(!(digitalRead(BUTTON) == pressed)){
+            pressed = !pressed;
         }
+        wait(100);
     }
+}
+
+bool Button::isPressed()
+{
+	return pressed;
 }
