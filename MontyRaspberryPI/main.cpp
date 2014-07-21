@@ -1,4 +1,3 @@
-#include "server.h"
 #include <QCoreApplication>
 
 #include "montycontroller.h"
