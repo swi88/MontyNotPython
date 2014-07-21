@@ -7,13 +7,15 @@ class Button: public QObject
 {
     Q_OBJECT
 public:
-    Button();
+    Button(int);
     bool isPressed();
+    const static int ZOOM_BUTTON;
+    const static int ROTATE_BUTTON;
 
 private:
     QThread* thread;
-    const static int BUTTON;
     bool pressed;
+    int pin;
 
 private slots:
     void checkButtonState();

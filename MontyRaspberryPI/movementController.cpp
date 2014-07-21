@@ -10,8 +10,8 @@
 
 MovementController::MovementController()
 {
-	buttonRotate = new Button(2);
-	buttonZoom = new Button(1);
+	buttonRotate = new Button(Button::ROTATE_BUTTON);
+	buttonZoom = new Button(Button::ZOOM_BUTTON);
 	wiringPiSetup();
 	soll = HOLD_POSITION;
 	ist = FLEXIBLE_POSITION;
