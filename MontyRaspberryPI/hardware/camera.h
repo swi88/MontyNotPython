@@ -13,6 +13,7 @@
 #include <opencv/cv.hpp>
 #include <QThread>
 #include <raspicam/raspicam_cv.h>
+#include <QDebug>
 
 using namespace cv;
 
