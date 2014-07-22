@@ -61,8 +61,9 @@ void Server::on_newConnection()
 void Server::on_readyRead()
 {
     qDebug() << "read input";
-    QByteArray tlength = socket->read(2); // read int32
+    QByteArray tlength = socket->read(4); // read int32
     int length = int_from_bytes(tlength.data(), true);
+    socket->waitForReadyRead();
     QByteArray message = socket->read(length);
 
     if(strcmp(message.constData(), QUIT_COMMAND) == 0)
