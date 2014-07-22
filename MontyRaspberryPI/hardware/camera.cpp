@@ -52,7 +52,8 @@ void Camera::grab(Mat* picture)
 	do {
 		capture.grab();
 		capture.retrieve (frame);
-		if(frame == nullptr)
+	    picture = &frame;
+		if(picture == nullptr)
 		{
 			qDebug()<<"frame empty, try to grab again..";
 			tries++;
@@ -62,9 +63,8 @@ void Camera::grab(Mat* picture)
 				return;
 			}
 		}
-	} while (frame == nullptr);
+	} while (picture == nullptr);
 	qDebug()<<"frame grabbed!";
-    picture = &frame;
     /**
 	if (!capture.read(frame)) {
 		cerr << "Unable to read next frame." << endl;
