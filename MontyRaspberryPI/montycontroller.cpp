@@ -26,6 +26,7 @@ MontyController::MontyController()
     connect(this, SIGNAL(stopAutomatic()), camera, SLOT(stopAutomatic()));
     connect(this, SIGNAL(grab(Mat*)), camera, SLOT(grab(Mat*)));
     connect(automaticControl, SIGNAL(move(int)), movementController, SLOT(performMovement(int)));
+    connect(automaticControl, SIGNAL(savePicture(Mat)),this,SLOT(savePicture(Mat));
     connect(this, SIGNAL(move(int)), movementController, SLOT(performMovement(int)));
     //LED Controller at Pin 23,24,25 (wiring pi pins 4,5,6)
     ledController = new LEDController(4,5,6);
@@ -77,6 +78,10 @@ void MontyController::savePicture(Mat picture)
     strftime (nameBuffer,80,"picture_%F_%T.png",timeinfo);
 
     qDebug()<<"save picture..";
+    if (!picture.data)
+    {
+        qDebug()<<"No image data...";
+    }
     if(imwrite(nameBuffer, picture))
     {
 		qDebug()<<"picture saved!";
