@@ -44,6 +44,7 @@ AutomaticControl::AutomaticControl()
 	ySizeThreeFourth = -1;
 	lx = -1;
 	rowsBorder = -1;
+	elem = getStructuringElement(MORPH_ELLIPSE, Size(7, 7), Point(3, 3));
 
     thread = new QThread();
     this->moveToThread(thread);
@@ -53,7 +54,8 @@ AutomaticControl::AutomaticControl()
 
 void AutomaticControl::update(Mat picture)
 {
-	resize(picture, frame, Size(640, 480), 2.28, 2.28, INTER_LANCZOS4);
+	resize(picture, frame, Size(640, 480));
+	cvtColor(frame, frame, CV_BGR2GRAY);
     frame = picture;
 	if(xSize == -1)
 	{
@@ -73,7 +75,6 @@ void AutomaticControl::update(Mat picture)
 	//update the background model
 	pMOG->operator()(frame, fgMaskMOG, 0.25);
 	//rauschen entfernen
-	elem = getStructuringElement(MORPH_ELLIPSE, Size(7, 7), Point(3, 3));
 	dilate(fgMaskMOG, fgMaskMOG, elem);
 	//eckpunkte finden, falls Bewegung vorhanden
 	fx = 0;
