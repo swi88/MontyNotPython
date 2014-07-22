@@ -86,15 +86,14 @@ void processVideo() {
 	// status flags
 	bool moveDetected = false;
 	bool pictureCaptured = false;
-	bool moving = false;
 
 	// Buffer für stabileres Bewegungsrechteck
-	int fxBuf[10];
-	int fyBuf[10];
-	int lxBuf[10];
+	int fxBuf[8];
+	int fyBuf[8];
+	int lxBuf[8];
 	int lxBufHigh = 0;
 	lxBuf[0] = 0;
-	int lyBuf[10];
+	int lyBuf[8];
 	int lyBufHigh = 0;
 	lyBuf[0] = 0;
 	uchar bufIdx = 0;
@@ -123,7 +122,8 @@ void processVideo() {
 	int rowsBorder;
 
 	// structured element, wird zur Rauschentfernung benötigt
-	Mat elem;
+	Mat elem = getStructuringElement(MORPH_ELLIPSE, Size(7, 7), Point(3, 3));
+	Mat reduced;
 
 	if (!capture.isOpened()) {
 		//error in opening the video input
@@ -132,8 +132,8 @@ void processVideo() {
 	}
 
 	// Bildgröße und davon abhängige Größen einmal berechnen und dann speichern (spart Rechenzeit)
-	xSize = capture.get(CV_CAP_PROP_FRAME_WIDTH); //get the width of frames of the video
-	ySize = capture.get(CV_CAP_PROP_FRAME_HEIGHT); //get the height of frames of the video
+	xSize = 640; //get the width of frames of the video
+	ySize = 480; //get the height of frames of the video
 	xSizeHalf = xSize / 2;
 	ySizeHalf = ySize / 2;
 	xSizeFourth = xSizeHalf / 2;
@@ -155,10 +155,11 @@ void processVideo() {
 			cerr << "Unable to read next frame." << endl;
 			continue;
 		}
+		resize(frame, reduced, Size(640, 480));
+		cvtColor(reduced, reduced, CV_BGR2GRAY);
 		//update the background model
-		pMOG->operator()(frame, fgMaskMOG, 0.25);
+		pMOG->operator()(reduced, fgMaskMOG, 0.25);
 		//rauschen entfernen
-		elem = getStructuringElement(MORPH_ELLIPSE, Size(7, 7), Point(3, 3));
 		dilate(fgMaskMOG, fgMaskMOG, elem);
 		//eckpunkte finden, falls Bewegung vorhanden
 		fx = 0;
@@ -190,7 +191,7 @@ void processVideo() {
 			fxBuf[bufIdx] = fx;
 			if(tmp == fxBufHigh) {
 				fxBufHigh = xSize;
-				for(tmp2 = 0; tmp2 < 10; tmp2++)
+				for(tmp2 = 0; tmp2 < 8; tmp2++)
 					if(fxBuf[tmp2] < fxBufHigh)
 						fxBufHigh = fxBuf[tmp2];
 			}
@@ -198,7 +199,7 @@ void processVideo() {
 			lxBuf[bufIdx] = lx;
 			if(tmp == lxBufHigh) {
 				lxBufHigh = 0;
-				for(tmp2 = 0; tmp2 < 10; tmp2++)
+				for(tmp2 = 0; tmp2 < 8; tmp2++)
 					if(lxBuf[tmp2] > lxBufHigh)
 						lxBufHigh = lxBuf[tmp2];
 			}
@@ -206,7 +207,7 @@ void processVideo() {
 			fyBuf[bufIdx] = fy;
 			if(tmp == fyBufHigh) {
 				fyBufHigh = ySize;
-				for(tmp2 = 0; tmp2 < 10; tmp2++)
+				for(tmp2 = 0; tmp2 < 8; tmp2++)
 					if(fyBuf[tmp2] < fyBufHigh)
 						fyBufHigh = fyBuf[tmp2];
 			}
@@ -214,15 +215,15 @@ void processVideo() {
 			lyBuf[bufIdx] = ly;
 			if(tmp == lyBufHigh) {
 				lyBufHigh = 0;
-				for(tmp2 = 0; tmp2 < 10; tmp2++)
+				for(tmp2 = 0; tmp2 < 8; tmp2++)
 					if(lyBuf[tmp2] > lyBufHigh)
 						lyBufHigh = lyBuf[tmp2];
 			}
 
-			bufIdx = bufIdx == 9 ? 0 : bufIdx + 1;
+			bufIdx = bufIdx == 7 ? 0 : bufIdx + 1;
 
-			rectangle(frame, cv::Point(fxBufHigh, fyBufHigh), cv::Point(lxBufHigh, lyBufHigh),
-					cv::Scalar(255, 0, 0), 5);
+//			rectangle(frame, cv::Point(fxBufHigh, fyBufHigh), cv::Point(lxBufHigh, lyBufHigh),
+//					cv::Scalar(255, 0, 0), 5);
 
 			//define movement
 			if(lxBufHigh - fxBufHigh > xSizeThreeFourth) soll = ZOOM_OUT;
