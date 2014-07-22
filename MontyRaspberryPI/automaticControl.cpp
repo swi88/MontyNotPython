@@ -54,13 +54,12 @@ AutomaticControl::AutomaticControl()
 
 void AutomaticControl::update(Mat picture)
 {
-	qDebug()<<"update automaticv controll";
-	resize(picture, frame, Size(320, 240));
+	qDebug()<<"resize picture..";
+	resize(picture, frame, Size(640, 480), 8.3, 8.3, INTER_LANCZOS4);
 	cvtColor(frame, frame, CV_BGR2GRAY);
-    frame = picture;
-	qDebug()<<"resizte end";
 	if(xSize == -1)
 	{
+		qDebug()<<"init buffer..";
 		xSize = frame.cols;
 		ySize = frame.rows;
 		xSizeHalf = xSize / 2;
@@ -78,12 +77,13 @@ void AutomaticControl::update(Mat picture)
 
 	}
 	//update the background model
-	qDebug()<<"background sub 0";
+	qDebug()<<"background subtraction..";
 	pMOG->operator()(frame, fgMaskMOG, 0.25);
-	qDebug()<<"backgroud sub 1";
 	//rauschen entfernen
+	qDebug()<<"noise reduction..";
 	dilate(fgMaskMOG, fgMaskMOG, elem);
 	//eckpunkte finden, falls Bewegung vorhanden
+	qDebug()<<"movement detection..";
 	fx = 0;
 	fy = 0;
 	lx = 0;
@@ -99,6 +99,7 @@ void AutomaticControl::update(Mat picture)
 		moveDetected = false;
 	// bei Bewegung: Rechteck mit Hilfe der Eckpunkte einzeichnen
 	if (moveDetected) {
+		qDebug()<<"movement detected..";
 		pictureCaptured = false;
 		tmp = 5;
 		tmp2 = 5;
@@ -107,6 +108,7 @@ void AutomaticControl::update(Mat picture)
 		for (ly = rowsBorder; ly >= tmp2 && fgMaskMOG.row(ly).data[tmp] < 127; ly--)
 			for (tmp = lx; tmp >= 5 && fgMaskMOG.row(ly).data[tmp] < 127; tmp--);
 
+		qDebug()<<"update buffer..";
 		tmp = fxBuf[bufIdx];
 		fxBuf[bufIdx] = fx;
 		if(tmp == fxBufHigh) {
@@ -141,6 +143,7 @@ void AutomaticControl::update(Mat picture)
 		}
 
 		bufIdx = bufIdx == 9 ? 0 : bufIdx + 1;
+		qDebug()<<"define movement..";
 		//define movement
 		if(lxBufHigh - fxBufHigh > xSizeThreeFourth) emit move(ZOOM_OUT);
 		else if(lyBufHigh > ySizeThreeFourth) emit move(MOVE_DOWN);
@@ -149,8 +152,10 @@ void AutomaticControl::update(Mat picture)
 		else if(lyBufHigh < ySizeHalf) emit move(MOVE_UP);
 		else if(lxBufHigh - fxBufHigh < xSizeHalf) emit move(ZOOM_IN);
 	} else {
+		qDebug()<<"no movement detected..";
 		// Falls noch kein Foto dieser ruhigen Szene gemacht wurde, mache nun eines.
         if(!pictureCaptured  && time.elapsed() > LAST_PICTURE) {
+        	qDebug()<<"new picture command..";
 			emit savePicture(picture);
 			pictureCaptured = true;
             time.restart();

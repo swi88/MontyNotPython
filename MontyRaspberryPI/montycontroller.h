@@ -14,7 +14,6 @@
 #include <opencv2/highgui/highgui.hpp>
 #include "hardware/util/ledstate.h"
 #include <ctime>
-#include <QDebug>
 using namespace cv;
 
 class MontyController : public QObject

@@ -13,6 +13,8 @@ Camera::Camera()
 {
     //capture(0);
     capture.set( CV_CAP_PROP_FORMAT, CV_8UC3 );
+    capture.set(CV_CAP_PROP_FRAME_WIDTH, 1920);
+    capture.set(CV_CAP_PROP_FRAME_HEIGHT, 1080);
     if (!capture.open()) {
         cerr<<"Error opening the camera"<<endl;
     }
