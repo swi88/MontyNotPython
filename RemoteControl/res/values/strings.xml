@@ -12,5 +12,6 @@
     <string name="arm1_down">Unten</string>
     <string name="arm2_up">Oben</string>
     <string name="arm2_down">Unten</string>
+    <string name="title_activity_image">Image</string>
 
 </resources>

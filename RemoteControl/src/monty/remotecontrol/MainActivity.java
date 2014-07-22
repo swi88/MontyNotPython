@@ -3,27 +3,25 @@ package monty.remotecontrol;
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.math.BigInteger;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Switch;
 import android.widget.Toast;
 
 public class MainActivity extends Activity {
 
-	private static final String DOMAIN = "10.0.2.2";
+	private static final String DOMAIN = "10.0.2.2"; //Monty: "192.168.42.1"; Lokal: "10.0.2.2";
 	private static final int PORT = 5100;
 	
 	private Socket socket;
+	private static BufferedReader inReader;
 	private static DataInputStream in;
 	private static DataOutputStream out;
 	private boolean connected = false;
@@ -40,6 +38,10 @@ public class MainActivity extends Activity {
 	
 	private static final String QUIT_COMMAND = "#QUIT_COMMAND";
 	private static final String GET_IMAGE_COMMAND = "#GET_IMAGE_COMMAND";
+	private static final String AUTOMATIC_OFF = "#AUTOMATIC_OFF";
+	private static final String AUTOMATIC_ON = "#AUTOMATIC_ON";
+	
+	private static boolean automaticMode = false;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -60,59 +62,90 @@ public class MainActivity extends Activity {
 			// connect to the server
 			connect();
 			if (connected) {
-				String command = "";
-				while (!command.equals(QUIT_COMMAND)) {
-					try {
-						System.out.println("1");
-//						byte[] bytes = new byte[4];
-//						in.read(bytes);
-						int length = in.readInt();
-//						String lengthStr = new String(bytes);
-//						int length = Integer.parseInt(lengthStr);
-						System.out.println("Length: " + length);
-						byte[] commandBytes = new byte[length];
-						in.read(commandBytes);
-						command = new String(commandBytes);
-						System.out.println(command);
-						if (command.equals(GET_IMAGE_COMMAND)) { 
-							// Receive Image and write it to the harddrive
-							final String fName = in.readUTF();
-							byte[] byteArray = new byte[10240];
-							int bytesReaded = in.read(byteArray);
-							FileOutputStream fos = openFileOutput(fName, Context.MODE_PRIVATE);
-							fos.write(byteArray, 0, bytesReaded);
-							fos.close();
-							runOnUiThread(new Runnable() {
-								@Override
-								public void run() {
-									Intent intent = new Intent(MainActivity.this, ImageActivity.class);
-									intent.putExtra("fName", fName);
-									startActivity(intent);
-								}
-							});
-						} else if(command.equals(QUIT_COMMAND)) {
-							connected = false;
-							socket.close();
-							System.out.println("CLIENT: quit from server");
-							runOnUiThread(new Runnable() {
-								@Override
-								public void run() {
-									Toast.makeText(MainActivity.this, "Server disconnected", Toast.LENGTH_SHORT).show();		
-								}
-							});
-						} else if (command.equals("#TEST")) {
-							System.out.println("CLIENT: TEST");
-							runOnUiThread(new Runnable() {
-								@Override
-								public void run() {
-									Toast.makeText(MainActivity.this, "TEST", Toast.LENGTH_SHORT).show();		
-								}
-							});
-						}
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				}
+//				String command = "";
+//				while (!command.equals(QUIT_COMMAND)) {
+//					try {
+//						// read command
+//						StringBuilder builder = new StringBuilder();
+//						int c;
+//						while ((c = inReader.read()) != -1) {
+//							char ch = (char) c;
+//							if (ch == '%') {
+//								break;
+//							}
+//						}
+//						while ((c = inReader.read()) != -1 && (char) c != '$') {
+//							builder.append((char) c);
+//						}
+//						command = builder.toString();
+//						// read the size of the next segment
+////						char[] sizeChars = new char[4];
+////						ByteBuffer buffer = ByteBuffer.allocate(sizeChars.length);
+////						buffer.order(ByteOrder.LITTLE_ENDIAN);
+////						in.read(sizeChars);
+////						for (int i = 0; i < sizeChars.length; i++) {
+////							buffer.put((byte) sizeChars[i]);
+////							System.out.println("C" + i + ":" + sizeChars[i] + ", " + buffer.get(i));
+////						} 
+////						buffer.position(0); 
+////						int size = buffer.getInt();
+////						System.out.println("size: " + size);
+////						char[] commandBytes = new char[size];
+////						in.read(commandBytes);
+////						command = new String(commandBytes);
+//						System.out.println("command: " + command);
+//						if (command.equals(GET_IMAGE_COMMAND)) {
+//							// read size
+//							builder = new StringBuilder();
+//							while ((c = inReader.read()) != -1) {
+//								char ch = (char) c;
+//								if (ch == '%') {
+//									break;
+//								}
+//							}
+//							while ((c = inReader.read()) != -1 && (char) c != '$') {
+//								builder.append((char) c);
+//							}
+//							int size = Integer.parseInt(builder.toString());
+//							System.out.println("size: " + size);
+//							byte[] byteArray = new byte[size];
+////							in.read(byteArray); 
+//							byteArray[0] = in.readByte();
+//							System.out.println("Done!");
+//							FileOutputStream fos = openFileOutput("hallo.gif", Context.MODE_PRIVATE);
+//							fos.write(byteArray);
+//							fos.close();
+//							
+//							runOnUiThread(new Runnable() {
+//								@Override
+//								public void run() {
+//									Intent intent = new Intent(MainActivity.this, ImageActivity.class);
+//									intent.putExtra("fName", "hallo.gif");
+//									startActivity(intent);
+//								}
+//							});
+////							// Receive Image and write it to the harddrive
+////							final String fName = in.readUTF();
+////							byte[] byteArray = new byte[10240];
+////							int bytesReaded = in.read(byteArray);
+////							FileOutputStream fos = openFileOutput(fName, Context.MODE_PRIVATE);
+////							fos.write(byteArray, 0, bytesReaded);
+////							fos.close();
+//						} else if(command.equals(QUIT_COMMAND)) {
+//							connected = false;
+//							socket.close();
+//							System.out.println("CLIENT: quit from server");
+//							runOnUiThread(new Runnable() {
+//								@Override
+//								public void run() {
+//									Toast.makeText(MainActivity.this, "Server disconnected", Toast.LENGTH_SHORT).show();		
+//								}
+//							});
+//						} 
+//					} catch (IOException e) {
+//						e.printStackTrace();
+//					}
+//				}
 			}
 		}
 	}
@@ -125,6 +158,7 @@ public class MainActivity extends Activity {
 			socket = new Socket(DOMAIN, PORT);
 
 			// obtain streams
+			inReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			in = new DataInputStream(socket.getInputStream());
 			out = new DataOutputStream(socket.getOutputStream());
 			System.out.println("CLIENT: connected to server");
@@ -143,56 +177,100 @@ public class MainActivity extends Activity {
 	
 	public void onCommand(View v) {
 		// send command to server
-		if (connected) {
-			try {
-				String command = null;
-				switch(v.getId()) {
-				case R.id.buttonTakePicture:
-					command = TAKE_PICTURE;
-					break;
-				case R.id.buttonRotateLeft:
-					command = ROTATE_LEFT;
-					break;
-				case R.id.buttonRotateRight:
-					command = ROTATE_RIGHT;
-					break;
-				case R.id.button1Up:
-					command = ZOOM_OUT;
-					break;
-				case R.id.button1Down:
-					command = ZOOM_IN;
-					break;
-				case R.id.button2Up:
-					command = ARM_UP;
-					break;
-				case R.id.button2Down:
-					command = ARM_DOWN;
-					break;
+		if (!automaticMode) {
+			if (connected) {
+				try {
+					String command = null;
+					switch(v.getId()) {
+					case R.id.buttonTakePicture:
+						command = TAKE_PICTURE;
+						break;
+					case R.id.buttonRotateLeft:
+						command = ROTATE_LEFT;
+						break;
+					case R.id.buttonRotateRight:
+						command = ROTATE_RIGHT;
+						break;
+					case R.id.button1Up:
+						command = ZOOM_OUT;
+						break;
+					case R.id.button1Down:
+						command = ZOOM_IN;
+						break;
+					case R.id.button2Up:
+						command = ARM_UP;
+						break;
+					case R.id.button2Down:
+						command = ARM_DOWN;
+						break;
+					}
+					sendToServer(command);
+					System.out.println("CLIENT: sent command to server");
+				} catch (IOException e) {
+					e.printStackTrace();
+					Toast.makeText(this, R.string.server_not_reachable, Toast.LENGTH_SHORT).show();
+					// try to reconnect
+					if (!listener.isAlive()) {
+						try {
+							listener.start();
+							Toast.makeText(this, "Verbinde mit Server", Toast.LENGTH_SHORT).show();
+						} catch (Exception e2) {
+						}
+					} else {
+						Toast.makeText(this, "Verbindungsversuch fehlgeschlagen!", Toast.LENGTH_SHORT).show();
+					}
 				}
-				// get bytes and send bytes to server
-				byte[] utf8Bytes = command.getBytes("UTF8");
-				out.writeInt(utf8Bytes.length);
-				out.flush();
-				out.write(utf8Bytes);
-				out.flush();
-				System.out.println("CLIENT: sent command to server");
-			} catch (IOException e) {
-				e.printStackTrace();
-				Toast.makeText(this, R.string.server_not_reachable, Toast.LENGTH_SHORT).show();
+			} else {
+				Toast.makeText(this, R.string.server_not_connected, Toast.LENGTH_SHORT).show();
 				// try to reconnect
-				if (connect()) {
-					Toast.makeText(this, "Verbinde mit Server", Toast.LENGTH_SHORT).show();
+				if (!listener.isAlive()) {
+					try {
+						listener.start();
+						Toast.makeText(this, "Verbinde mit Server", Toast.LENGTH_SHORT).show();
+					} catch (Exception e) {
+					}
 				} else {
 					Toast.makeText(this, "Verbindungsversuch fehlgeschlagen!", Toast.LENGTH_SHORT).show();
 				}
 			}
 		} else {
-			Toast.makeText(this, R.string.server_not_connected, Toast.LENGTH_SHORT).show();
-			// try to reconnect
-			if (connect()) {
-				Toast.makeText(this, "Verbinde mit Server", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "Manueller Modus nicht aktiviert!", Toast.LENGTH_SHORT).show();
+		}
+	}
+	
+	private void sendToServer(String command) throws IOException {
+		// get bytes and send bytes to server
+		byte[] utf8Bytes = command.getBytes("UTF8");
+		out.writeInt(utf8Bytes.length);
+		out.flush();
+		out.write(utf8Bytes);
+		out.flush();		
+	}
+
+	public void onSwitchClick(View v) {
+		if (((Switch) v).isChecked()) {
+			if (connected) {
+				try {
+					sendToServer(AUTOMATIC_OFF);
+					automaticMode = false;
+				} catch (Exception e) {
+				}
+				Toast.makeText(this, "Manuelle Steuerung aktiviert", Toast.LENGTH_SHORT).show();
 			} else {
-				Toast.makeText(this, "Verbindungsversuch fehlgeschlagen!", Toast.LENGTH_SHORT).show();
+				Toast.makeText(this, R.string.server_not_connected, Toast.LENGTH_SHORT).show();
+				((Switch) v).setChecked(false);
+			}
+		} else {
+			if (connected) {
+				try {
+					sendToServer(AUTOMATIC_ON);
+					automaticMode = true;
+				} catch (Exception e) {
+				}
+				Toast.makeText(this, "Manuelle Steuerung deaktiviert", Toast.LENGTH_SHORT).show();
+			}  else {
+				Toast.makeText(this, R.string.server_not_connected, Toast.LENGTH_SHORT).show();
+				((Switch) v).setChecked(true);
 			}
 		}
 	}
