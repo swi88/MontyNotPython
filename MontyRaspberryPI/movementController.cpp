@@ -78,7 +78,7 @@ void MovementController::moveLeft()
 {
     qDebug()<<"moveLeft()";
     if(!stepperRotate->isActive()) {
-        stepperRotate->clockwise(50);
+        stepperRotate->clockwise(100);
     	if(buttonRotate->isPressed()) ist |= LEFT_END_REACHED;
     	else ist &= ROTATION_RESET_MASK;
     }
@@ -88,7 +88,7 @@ void MovementController::moveRight()
 {
     qDebug()<<"moveRight()";
 	if(!stepperRotate->isActive()) {
-        stepperRotate->counterclockwise(50);
+        stepperRotate->counterclockwise(100);
     	if(buttonRotate->isPressed()) ist |= RIGHT_END_REACHED;
     	else ist &= ROTATION_RESET_MASK;
 	}
@@ -98,7 +98,7 @@ void MovementController::zoomIn()
 {
     qDebug()<<"zoomIn()";
 	if(!stepperZoom->isActive()) {
-        stepperZoom->counterclockwise(50);
+        stepperZoom->counterclockwise(10);
     	if(buttonZoom->isPressed()) ist |= ZOOM_IN_POSITION;
     	else ist &= ZOOM_RESET_MASK;
 	}
@@ -108,7 +108,7 @@ void MovementController::zoomOut()
 {
     qDebug()<<"zoomOut()";
 	if(!stepperZoom->isActive()) {
-        stepperZoom->clockwise(50);
+        stepperZoom->clockwise(10);
     	if(buttonZoom->isPressed()) ist |= ZOOM_OUT_POSITION;
     	else ist &= ZOOM_RESET_MASK;
 	}
