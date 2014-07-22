@@ -56,6 +56,7 @@ void MontyController::takePicture()
 {
 	Mat* picture;
 	emit grab(picture);
+    flashController->checkImage(picture);
 	this->savePicture(*picture);
 }
 

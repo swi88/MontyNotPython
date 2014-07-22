@@ -7,10 +7,13 @@
 
 using namespace std;
 
+
+const int AutomaticControl::LAST_PICTURE = 60;
 AutomaticControl::AutomaticControl()
 {
 	pMOG = new BackgroundSubtractorMOG();
-
+    time.start();
+    time.addSecs(120);
 	moveDetected = false;
 	pictureCaptured = false;
 	moving = false;
@@ -141,9 +144,10 @@ void AutomaticControl::update(Mat picture)
 		else if(lxBufHigh - fxBufHigh < xSizeHalf) emit move(ZOOM_IN);
 	} else {
 		// Falls noch kein Foto dieser ruhigen Szene gemacht wurde, mache nun eines.
-		if(!pictureCaptured) {
+        if(!pictureCaptured  && time.elapsed() > LAST_PICTURE) {
 			emit savePicture(frame);
 			pictureCaptured = true;
+            time.restart();
 		}
 	}
 }

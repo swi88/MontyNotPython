@@ -11,17 +11,17 @@ using namespace std;
 
 Camera::Camera()
 {
-    capture(0);
+    //capture(0);
     capture.set( CV_CAP_PROP_FORMAT, CV_8UC3 );
+    if (!capture.open()) {
+        cerr<<"Error opening the camera"<<endl;
+    }
 	end = true;
     thread = new QThread();
     this->moveToThread(thread);
     connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
     thread->start();
-	if (!capture.isOpened()) {
-		//error in opening the video input
-		cerr << "Cannot open the video cam" << endl;
-	}
+
 }
 
 Camera::~Camera()
@@ -35,10 +35,12 @@ void Camera::startAutomatic()
 	end = false;
 	while(!end)
     {
-        if(capture.grab() && capture.retrieve(frame))
+        if(capture.grab()){
+            capture.retrieve(frame);
         	emit update(frame);
+        }
         else
-    		qDebug()<<"grabbing failed, trying again..";
+            cerr<<"grabbing failed, trying again.."<<endl;
 	}
 }
 
@@ -50,17 +52,18 @@ void Camera::stopAutomatic()
 void Camera::grab(Mat* picture)
 {
 	int tries = 0;
-	while(!(capture.grab() && capture.retrieve(frame))) {
-		qDebug()<<"frame empty, trying to grab again..";
+    while(!(capture.grab())) {
+        capture.retrieve(frame);
+        cerr<<"frame empty, trying to grab again..";
 		tries++;
 		if(tries == 4)
 		{
-			qDebug()<<"grabbing failed!";
+            cerr<<"grabbing failed!"<<endl;
 			return;
 		}
 	}
     picture = &frame;
-	qDebug()<<"frame grabbed!";
+    cerr<<"frame grabbed!"<<endl;
     /**
 	if (!capture.read(frame)) {
 		cerr << "Unable to read next frame." << endl;

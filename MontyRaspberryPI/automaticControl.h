@@ -10,6 +10,7 @@
 
 #include <opencv2/video/background_segm.hpp>
 #include <QObject>
+#include <QTime>
 #include <opencv/cv.hpp>
 
 using namespace cv;
@@ -71,6 +72,10 @@ private:
 
 	// structured element, wird zur Rauschentfernung benötigt
 	Mat elem;
+
+    QTime time;
+
+    const static  int LAST_PICTURE;
 private slots:
 	void update(Mat picture);
 };
