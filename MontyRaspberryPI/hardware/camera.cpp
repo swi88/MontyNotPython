@@ -55,6 +55,7 @@ void Camera::stopAutomatic()
 
 void Camera::grab(Mat* picture)
 {
+    qDebug()<<"grab frame: start";
 	int tries = 0;
     while(!(capture.grab())) {
         capture.retrieve(frame);
@@ -68,6 +69,7 @@ void Camera::grab(Mat* picture)
 	}
     picture = &frame;
     cerr<<"frame grabbed!"<<endl;
+    qDebug()<<"grab frame: end";
     /**
 	if (!capture.read(frame)) {
 		cerr << "Unable to read next frame." << endl;

@@ -17,7 +17,7 @@ import android.widget.Toast;
 
 public class MainActivity extends Activity {
 
-	private static final String DOMAIN = "192.168.42.1"; //Monty: "192.168.42.1"; Lokal: "10.0.2.2";
+	private static final String DOMAIN = "10.0.2.2"; //Monty: "192.168.42.1"; Lokal: "10.0.2.2";
 	private static final int PORT = 5100;
 	
 	private Socket socket;
@@ -240,11 +240,12 @@ public class MainActivity extends Activity {
 	
 	private void sendToServer(String command) throws IOException {
 		// get bytes and send bytes to server
-		byte[] utf8Bytes = command.getBytes("UTF8");
+		byte[] utf8Bytes = command.getBytes("UTF8"); 
+		System.out.println("bytes count: " + utf8Bytes.length);
 		out.writeInt(utf8Bytes.length);
 		out.flush();
 		out.write(utf8Bytes);
-		out.flush();		
+		out.flush(); 
 	}
 
 	public void onSwitchClick(View v) {

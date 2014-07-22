@@ -75,10 +75,13 @@ void MontyController::receiveUltrasonicDistance(double value)
 
 void MontyController::takePicture()
 {
+    qDebug()<<"takePicture: start";
 	Mat* picture;
 	emit grab(picture);
     flashController->checkImage(*picture);
+    qDebug()<<"takePicture: before savePicture";
 	this->savePicture(*picture);
+    qDebug()<<"takePicture: end";
 }
 
 void MontyController::savePicture(Mat picture)
