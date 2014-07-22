@@ -53,6 +53,8 @@ AutomaticControl::AutomaticControl()
 
 void AutomaticControl::update(Mat picture)
 {
+	resize(picture, frame, Size(640, 480), 2.28, 2.28, INTER_LANCZOS4);
+    frame = picture;
 	if(xSize == -1)
 	{
 		xSize = frame.cols;
@@ -68,7 +70,6 @@ void AutomaticControl::update(Mat picture)
 		fxBuf[0] = xSize;
 		fyBuf[0] = ySize;
 	}
-    frame = picture;
 	//update the background model
 	pMOG->operator()(frame, fgMaskMOG, 0.25);
 	//rauschen entfernen
@@ -145,7 +146,7 @@ void AutomaticControl::update(Mat picture)
 	} else {
 		// Falls noch kein Foto dieser ruhigen Szene gemacht wurde, mache nun eines.
         if(!pictureCaptured  && time.elapsed() > LAST_PICTURE) {
-			emit savePicture(frame);
+			emit savePicture(picture);
 			pictureCaptured = true;
             time.restart();
 		}
