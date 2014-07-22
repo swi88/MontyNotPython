@@ -63,14 +63,14 @@ void MovementController::performMovement(int movementState) {
 void MovementController::moveUp()
 {
     qDebug()<<"moveUp()";
-    servo->setAngle(servoAngle + 2);
+    servo->setAngle(servoAngle + 5);
 	servoAngle = servo->getCurrentAngle();
 }
 
 void MovementController::moveDown()
 {
     qDebug()<<"moveDown()";
-    servo->setAngle(servoAngle - 2);
+    servo->setAngle(servoAngle - 5);
 	servoAngle = servo->getCurrentAngle();
 }
 
