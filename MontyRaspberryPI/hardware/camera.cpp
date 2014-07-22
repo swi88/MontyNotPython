@@ -22,6 +22,7 @@ Camera::Camera()
     thread = new QThread();
     this->moveToThread(thread);
     connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
+
     thread->start();
 
 }
@@ -43,7 +44,6 @@ void Camera::startAutomatic()
         }
         else
             cerr<<"grabbing failed, trying again.."<<endl;
-      sleep();
 	}
 }
 

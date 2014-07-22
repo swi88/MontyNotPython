@@ -51,6 +51,7 @@ private slots:
     void armUp();
     void armDown();
     void autoControl();
+    void manuelControl();
     void stopAutoControl();
 };
 

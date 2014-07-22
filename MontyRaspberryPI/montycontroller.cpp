@@ -5,7 +5,7 @@ MontyController::MontyController()
 {
     qRegisterMetaType< cv::Mat >("cv::Mat");
     qRegisterMetaType< Mat >("Mat");
-	infoState = CONTROLL_MANUAL;
+
     server = new Server();
     connect(server,SIGNAL(takePicture()),this,SLOT(takePicture()));
     connect(server,SIGNAL(rotateLeft()),this,SLOT(rotateLeft()));
@@ -44,7 +44,14 @@ MontyController::MontyController()
 void MontyController::autoControl()
 {
 	this->infoState = CONTROLL_AUTO;
-	emit startAutomatic();
+    ledController->setInfoLEDState(CONTROLL_AUTO);
+    emit startAutomatic();
+}
+
+void MontyController::manuelControl()
+{
+    this->infoState = CONTROLL_MANUAL;
+    ledController->setInfoLEDState(CONTROLL_MANUAL);
 }
 
 void MontyController::stopAutoControl()
