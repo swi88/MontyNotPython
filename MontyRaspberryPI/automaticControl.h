@@ -74,7 +74,7 @@ private:
 	Mat elem;
 
     QTime time;
-
+    QTime moveTime;
 
     const static  int LAST_PICTURE;
 private slots:

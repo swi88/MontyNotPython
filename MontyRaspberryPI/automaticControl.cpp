@@ -14,6 +14,8 @@ AutomaticControl::AutomaticControl()
 	pMOG = new BackgroundSubtractorMOG();
     time.start();
     time.addSecs(120);
+    moveTime.start();
+    moveTime.addSecs(120);
 	moveDetected = false;
 	pictureCaptured = false;
 	moving = false;
@@ -54,6 +56,8 @@ AutomaticControl::AutomaticControl()
 
 void AutomaticControl::update(Mat picture)
 {
+	if(!(moveTime.elapsed() > LAST_PICTURE))
+		return;
 	qDebug()<<"resize picture..";
 	resize(picture, frame, Size(640, 480), 8.3, 8.3, INTER_LANCZOS4);
 	cvtColor(frame, frame, CV_BGR2GRAY);
@@ -152,6 +156,7 @@ void AutomaticControl::update(Mat picture)
 		else if(lyBufHigh < ySizeHalf) emit move(MOVE_UP);
 		else if(lxBufHigh - fxBufHigh < xSizeHalf) emit move(ZOOM_IN);
 		else qDebug()<<"hold position";
+		moveTime.restart();
 	} else {
 		qDebug()<<"no movement detected..";
 		// Falls noch kein Foto dieser ruhigen Szene gemacht wurde, mache nun eines.
