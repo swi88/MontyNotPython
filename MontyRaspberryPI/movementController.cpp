@@ -89,7 +89,7 @@ void MovementController::moveLeft()
 void MovementController::moveRight()
 {
 	if(!stepperRotate->isActive()) {
-        stepperRotate->clockwise(50);
+        stepperRotate->clockwise(20);
     	if(buttonRotate->isPressed()) ist |= RIGHT_END_REACHED;
     	else ist &= ROTATION_RESET_MASK;
 	}
@@ -98,7 +98,7 @@ void MovementController::moveRight()
 void MovementController::zoomIn()
 {
 	if(!stepperZoom->isActive()) {
-        stepperZoom->clockwise(50);
+        stepperZoom->clockwise(20);
     	if(buttonZoom->isPressed()) ist |= ZOOM_IN_POSITION;
     	else ist &= ZOOM_RESET_MASK;
 	}
@@ -107,7 +107,7 @@ void MovementController::zoomIn()
 void MovementController::zoomOut()
 {
 	if(!stepperZoom->isActive()) {
-        stepperZoom->counterclockwise(50);
+        stepperZoom->counterclockwise(20);
     	if(buttonZoom->isPressed()) ist |= ZOOM_OUT_POSITION;
     	else ist &= ZOOM_RESET_MASK;
 	}

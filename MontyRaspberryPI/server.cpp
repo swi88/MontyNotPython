@@ -118,11 +118,15 @@ bool Server::sendPicture(QString fileName)
     }
 
     QByteArray image;
+   /**
     while (!file.atEnd()) {
         image.append(file.readLine());
-    }
+    }**/
+    image = file.readAll();
     socket->write(GET_IMAGE_COMMAND);
+    socket->waitForBytesWritten();
     socket->write(image);
+    socket->waitForBytesWritten();
     socket->flush();
 }
 
