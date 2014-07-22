@@ -33,8 +33,8 @@ void MovementController::performMovement(int movementState) {
 	soll = movementState;
 	servoAngle = servo->getCurrentAngle();
 	// ist-Wert aktualisieren
-	if(servoAngle <= 0) ist |= LOWER_END_REACHED;
-	else if(servoAngle >= 90) ist |= UPPER_END_REACHED;
+	if(servoAngle <= 45) ist |= LOWER_END_REACHED;
+	else if(servoAngle >= 135) ist |= UPPER_END_REACHED;
 	else ist &= SERVO_RESET_MASK;
 	// falls Grenzwert für die Bewegung bereits erreicht..
 	if((soll & ist) != 0) {
