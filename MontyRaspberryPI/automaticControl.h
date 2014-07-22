@@ -37,11 +37,11 @@ private:
 	bool moving;
 
 	// Buffer für stabileres Bewegungsrechteck
-	int fxBuf[10];
-	int fyBuf[10];
-	int lxBuf[10];
+	int fxBuf[8];
+	int fyBuf[8];
+	int lxBuf[8];
 	int lxBufHigh;
-	int lyBuf[10];
+	int lyBuf[8];
 	int lyBufHigh;
 	uchar bufIdx;
 

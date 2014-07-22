@@ -113,7 +113,7 @@ void AutomaticControl::update(Mat picture)
 		fxBuf[bufIdx] = fx;
 		if(tmp == fxBufHigh) {
 			fxBufHigh = xSize;
-			for(tmp2 = 0; tmp2 < 10; tmp2++)
+			for(tmp2 = 0; tmp2 < 8; tmp2++)
 				if(fxBuf[tmp2] < fxBufHigh)
 					fxBufHigh = fxBuf[tmp2];
 		}
@@ -121,7 +121,7 @@ void AutomaticControl::update(Mat picture)
 		lxBuf[bufIdx] = lx;
 		if(tmp == lxBufHigh) {
 			lxBufHigh = 0;
-			for(tmp2 = 0; tmp2 < 10; tmp2++)
+			for(tmp2 = 0; tmp2 < 8; tmp2++)
 				if(lxBuf[tmp2] > lxBufHigh)
 					lxBufHigh = lxBuf[tmp2];
 		}
@@ -129,7 +129,7 @@ void AutomaticControl::update(Mat picture)
 		fyBuf[bufIdx] = fy;
 		if(tmp == fyBufHigh) {
 			fyBufHigh = ySize;
-			for(tmp2 = 0; tmp2 < 10; tmp2++)
+			for(tmp2 = 0; tmp2 < 8; tmp2++)
 				if(fyBuf[tmp2] < fyBufHigh)
 					fyBufHigh = fyBuf[tmp2];
 		}
@@ -137,12 +137,12 @@ void AutomaticControl::update(Mat picture)
 		lyBuf[bufIdx] = ly;
 		if(tmp == lyBufHigh) {
 			lyBufHigh = 0;
-			for(tmp2 = 0; tmp2 < 10; tmp2++)
+			for(tmp2 = 0; tmp2 < 8; tmp2++)
 				if(lyBuf[tmp2] > lyBufHigh)
 					lyBufHigh = lyBuf[tmp2];
 		}
 
-		bufIdx = bufIdx == 9 ? 0 : bufIdx + 1;
+		bufIdx = bufIdx == 7 ? 0 : bufIdx + 1;
 		qDebug()<<"define movement..";
 		//define movement
 		if(lxBufHigh - fxBufHigh > xSizeThreeFourth) emit move(ZOOM_OUT);
@@ -151,6 +151,7 @@ void AutomaticControl::update(Mat picture)
 		else if(fxBufHigh <= 10) emit move(MOVE_LEFT);
 		else if(lyBufHigh < ySizeHalf) emit move(MOVE_UP);
 		else if(lxBufHigh - fxBufHigh < xSizeHalf) emit move(ZOOM_IN);
+		else qDebug()<<"hold position";
 	} else {
 		qDebug()<<"no movement detected..";
 		// Falls noch kein Foto dieser ruhigen Szene gemacht wurde, mache nun eines.
