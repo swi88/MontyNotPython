@@ -1,4 +1,5 @@
 #include "montycontroller.h"
+#include <stddef.h>
 
 MontyController::MontyController()
 {
@@ -68,11 +69,16 @@ void MontyController::savePicture(Mat picture)
     timeinfo = localtime (&rawtime);
     strftime (nameBuffer,80,"picture_%F_%T.png",timeinfo);
 
+    qDebug()<<"save picture..";
+    if(picture == NULL)
+    {
+    	qDebug()<<"picture object empty!";
+    }
     imwrite(nameBuffer, picture);
+    qDebug()<<"picture saved!";
     
     // send picture back to client
-    const char* name = "picture.png";
-    server->sendPicture(QString::fromLatin1(name));
+    server->sendPicture(QString::fromLatin1(nameBuffer));
 }
 
 void MontyController::rotateLeft()
