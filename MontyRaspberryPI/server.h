@@ -33,6 +33,8 @@ signals:
     void zoomOut();
     void armUp();
     void armDown();
+    void automaticOff();
+    void automaticOn();
 };
 
 #endif // SERVER_H

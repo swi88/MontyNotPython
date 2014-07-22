@@ -13,6 +13,8 @@ static const char* ARM_UP = "#ARM_UP";
 static const char* ARM_DOWN = "#ARM_DOWN";
 static const char* QUIT_COMMAND = "#QUIT_COMMAND";
 static const char* GET_IMAGE_COMMAND = "#GET_IMAGE_COMMAND";
+static const char* AUTOMATIC_OFF = "#AUTOMATIC_OFF";
+static const char* AUTOMATIC_ON = "#AUTOMATIC_ON";
 
 int int_from_bytes(const char * bytes, bool reverse)
 {
@@ -104,6 +106,14 @@ void Server::on_readyRead()
     {
         qDebug() << "SERVER: arm down";
         emit armDown();
+    } else if(strcmp(message.constData(), AUTOMATIC_OFF) == 0)
+    {
+        qDebug() << "SERVER: automatic off";
+        emit automaticOff();
+    } else if(strcmp(message.constData(), AUTOMATIC_ON) == 0)
+    {
+        qDebug() << "SERVER: automatic on";
+        emit automaticOn();
     }
 }
 
@@ -151,7 +161,7 @@ void Server::testMethode()
     bytes[3] = n & 0xFF;
 
     socket->write(bytes);
-    socket->waitForBytesWritten();
+    socket->waitForBytesWritten(3000);
     socket->write("#TEST");
     socket->waitForBytesWritten();
     socket->flush();

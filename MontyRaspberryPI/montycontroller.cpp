@@ -12,6 +12,8 @@ MontyController::MontyController()
     connect(server,SIGNAL(zoomOut()),this,SLOT(zoomOut()));
     connect(server,SIGNAL(armUp()),this,SLOT(armUp()));
     connect(server,SIGNAL(armDown()),this,SLOT(armDown()));
+    connect(server,SIGNAL(automaticOff(),this,SLOT(stopAutoControl());
+    connect(server,SIGNAL(automaticOn(),this,SLOT(autoControl());
     server->listen();
 
     camera = new Camera();
@@ -76,10 +78,10 @@ void MontyController::savePicture(Mat picture)
 		qDebug()<<"picture saved!";
 
 		// send picture back to client
-		if(server->sendPicture(QString::fromLatin1(nameBuffer)))
-			qDebug()<<"picture sent";
-		else
-			qDebug()<<"can not send the picture!";
+		//if(server->sendPicture(QString::fromLatin1(nameBuffer)))
+		//	qDebug()<<"picture sent";
+		//else
+		//	qDebug()<<"can not send the picture!";
     }
     else
     {
@@ -89,7 +91,6 @@ void MontyController::savePicture(Mat picture)
 
 void MontyController::rotateLeft()
 {
-    server->testMethode();
 	emit move(MOVE_LEFT);
 }
 
