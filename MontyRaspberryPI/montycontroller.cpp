@@ -15,6 +15,8 @@ MontyController::MontyController()
     connect(server,SIGNAL(zoomOut()),this,SLOT(zoomOut()));
     connect(server,SIGNAL(armUp()),this,SLOT(armUp()));
     connect(server,SIGNAL(armDown()),this,SLOT(armDown()));
+    connect(server,SIGNAL(automaticOff(),this,SLOT(stopAutoControl());
+    connect(server,SIGNAL(automaticOn(),this,SLOT(autoControl());
     server->listen();
 
     camera = new Camera();
@@ -65,13 +67,12 @@ void MontyController::savePicture(Mat picture)
     imwrite(nameBuffer, picture);
     
     // send picture back to client
-    const char* name = "picture.png";
-    server->sendPicture(QString::fromLatin1(name));
+    //const char* name = "picture.png";
+    //server->sendPicture(QString::fromLatin1(name));
 }
 
 void MontyController::rotateLeft()
 {
-    server->testMethode();
 	emit move(MOVE_LEFT);
 }
 
