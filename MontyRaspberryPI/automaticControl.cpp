@@ -9,13 +9,14 @@ using namespace std;
 
 
 const int AutomaticControl::LAST_PICTURE = 60;
+const int AutomaticControl::LAST_MOVE = 3;
 AutomaticControl::AutomaticControl()
 {
 	pMOG = new BackgroundSubtractorMOG();
     time.start();
     time.addSecs(120);
     moveTime.start();
-    moveTime.addSecs(120);
+    moveTime.addSecs(6);
 	moveDetected = false;
 	pictureCaptured = false;
 	moving = false;
@@ -145,7 +146,7 @@ void AutomaticControl::update(Mat picture)
 		}
 
 		bufIdx = bufIdx == 7 ? 0 : bufIdx + 1;
-		if(moveTime.elapsed() > LAST_PICTURE)
+		if(moveTime.elapsed() > LAST_MOVE)
 		{
 			qDebug()<<"define movement..";
 			//define movement

@@ -77,6 +77,7 @@ private:
     QTime moveTime;
 
     const static  int LAST_PICTURE;
+    const static int LAST_MOVE;
 private slots:
 	void update(Mat picture);
 };
