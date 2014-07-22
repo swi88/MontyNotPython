@@ -37,7 +37,7 @@ void MovementController::performMovement(int movementState) {
 	else if(servoAngle >= 45) ist |= UPPER_END_REACHED;
 	else ist &= SERVO_RESET_MASK;
 	// falls Grenzwert für die Bewegung bereits erreicht..
-	if((soll & ist) > 0) {
+	if((soll & ist) != 0) {
 		if(soll == MOVE_UP && (ist & ZOOM_OUT_POSITION) == 0 ) soll = ZOOM_OUT;
 		else if(soll == MOVE_DOWN && (ist & ZOOM_IN_POSITION) == 0) soll = ZOOM_IN;
 		else soll = HOLD_POSITION;
