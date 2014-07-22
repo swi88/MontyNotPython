@@ -65,18 +65,21 @@ void MovementController::performMovement(int movementState) {
 
 void MovementController::moveUp()
 {
+    qDebug()<<"moveUp()";
     servo->setAngle(servoAngle + 1);
 	servoAngle = servo->getCurrentAngle();
 }
 
 void MovementController::moveDown()
 {
+    qDebug()<<"moveDown()";
     servo->setAngle(servoAngle - 1);
 	servoAngle = servo->getCurrentAngle();
 }
 
 void MovementController::moveLeft()
 {
+    qDebug()<<"moveLeft()";
     if(!stepperRotate->isActive()) {
         stepperRotate->clockwise(50);
     	if(buttonRotate->isPressed()) ist |= LEFT_END_REACHED;
@@ -86,6 +89,7 @@ void MovementController::moveLeft()
 
 void MovementController::moveRight()
 {
+    qDebug()<<"moveRight()";
 	if(!stepperRotate->isActive()) {
         stepperRotate->counterclockwise(50);
     	if(buttonRotate->isPressed()) ist |= RIGHT_END_REACHED;
@@ -95,6 +99,7 @@ void MovementController::moveRight()
 
 void MovementController::zoomIn()
 {
+    qDebug()<<"zoomIn()";
 	if(!stepperZoom->isActive()) {
         stepperZoom->clockwise(50);
     	if(buttonZoom->isPressed()) ist |= ZOOM_IN_POSITION;
@@ -104,6 +109,7 @@ void MovementController::zoomIn()
 
 void MovementController::zoomOut()
 {
+    qDebug()<<"zoomOut()";
 	if(!stepperZoom->isActive()) {
         stepperZoom->counterclockwise(50);
     	if(buttonZoom->isPressed()) ist |= ZOOM_OUT_POSITION;
