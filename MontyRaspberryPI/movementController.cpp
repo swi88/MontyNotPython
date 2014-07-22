@@ -63,14 +63,15 @@ void MovementController::performMovement(int movementState) {
 void MovementController::moveUp()
 {
     qDebug()<<"moveUp()";
-    servo->setAngle(servoAngle + 1);
+    servo->setAngle(servoAngle + 20);
+    servo->setAngle(servoAngle + 15);
 	servoAngle = servo->getCurrentAngle();
 }
 
 void MovementController::moveDown()
 {
     qDebug()<<"moveDown()";
-    servo->setAngle(servoAngle - 1);
+    servo->setAngle(servoAngle - 15);
 	servoAngle = servo->getCurrentAngle();
 }
 
@@ -98,7 +99,8 @@ void MovementController::zoomIn()
 {
     qDebug()<<"zoomIn()";
 	if(!stepperZoom->isActive()) {
-        stepperZoom->counterclockwise(10);
+        if((ist & ZOOM_OUT_POSITION) != 0) stepperZoom->counterclockwise(20);
+        else stepperZoom->counterclockwise(10);
     	if(buttonZoom->isPressed()) ist |= ZOOM_IN_POSITION;
     	else ist &= ZOOM_RESET_MASK;
 	}
@@ -108,7 +110,8 @@ void MovementController::zoomOut()
 {
     qDebug()<<"zoomOut()";
 	if(!stepperZoom->isActive()) {
-        stepperZoom->clockwise(10);
+        if((ist & ZOOM_IN_POSITION) != 0) stepperZoom->clockwise(20);
+        else stepperZoom->clockwise(10);
     	if(buttonZoom->isPressed()) ist |= ZOOM_OUT_POSITION;
     	else ist &= ZOOM_RESET_MASK;
 	}
