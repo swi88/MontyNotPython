@@ -43,10 +43,7 @@ void MovementController::performMovement(int movementState) {
 		else soll = HOLD_POSITION;
 	}
 	// Falls Hindernis vor dem Ultraschallsensor erkannt..
-	if(soll == HOLD_POSITION) {
-		distance = ultrasonic->getDistance();
-		if((ist & ZOOM_OUT_POSITION) == 0 && distance < 15) soll = ZOOM_OUT;
-	}
+	if((ist & ZOOM_OUT_POSITION) == 0 && distance < 15) soll = ZOOM_OUT;
 	switch(soll) {
 	case MOVE_UP: moveUp();
 	break;
