@@ -65,14 +65,12 @@ void MovementController::performMovement(int movementState) {
 
 void MovementController::moveUp()
 {
-    servo->setAngle(servoAngle + 2);
     servo->setAngle(servoAngle + 1);
 	servoAngle = servo->getCurrentAngle();
 }
 
 void MovementController::moveDown()
 {
-    servo->setAngle(servoAngle - 2);
     servo->setAngle(servoAngle - 1);
 	servoAngle = servo->getCurrentAngle();
 }
