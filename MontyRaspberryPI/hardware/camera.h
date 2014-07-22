@@ -23,6 +23,7 @@ class Camera : public QObject
 public:
 	Camera();
     ~Camera();
+	Mat grab();
 	signals:
 	void update(Mat picture);
 private:
@@ -34,7 +35,6 @@ private:
 private slots:
 	void startAutomatic(void);
 	void stopAutomatic(void);
-	void grab(Mat* picture);
 };
 
 #endif /* CAMERA_H_ */

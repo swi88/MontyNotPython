@@ -53,23 +53,22 @@ void Camera::stopAutomatic()
 	end = true;
 }
 
-void Camera::grab(Mat* picture)
+Mat Camera::grab()
 {
     qDebug()<<"grab frame: start";
 	int tries = 0;
     while(!(capture.grab())) {
-        capture.retrieve(frame);
-        cerr<<"frame empty, trying to grab again..";
+    	qDebug()<<"frame empty, trying to grab again..";
 		tries++;
 		if(tries == 4)
 		{
             cerr<<"grabbing failed!"<<endl;
-			return;
+			return Mat(1, 1);
 		}
 	}
-    picture = &frame;
-    cerr<<"frame grabbed!"<<endl;
-    qDebug()<<"grab frame: end";
+    capture.retrieve(frame);
+    qDebug()<<"frame grabbed!"<<endl;
+    return frame;
     /**
 	if (!capture.read(frame)) {
 		cerr << "Unable to read next frame." << endl;
