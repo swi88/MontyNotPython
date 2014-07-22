@@ -35,6 +35,7 @@ MontyController::MontyController()
     connect(flashController,SIGNAL(setFlash(MouthState)),ledController,SLOT(setMouthLEDState(MouthState)));
     connect(camera,SIGNAL(update(Mat)),flashController,SLOT(checkImage(Mat)));
     qDebug()<<"started";
+    this->autoControl();
 }
 
 void MontyController::autoControl()
