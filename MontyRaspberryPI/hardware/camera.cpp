@@ -43,12 +43,13 @@ void Camera::startAutomatic()
         }
         else
             cerr<<"grabbing failed, trying again.."<<endl;
-      sleep(1);
+      sleep();
 	}
 }
 
 void Camera::stopAutomatic()
 {
+    cerr<<"stop camera"<<endl;
 	end = true;
 }
 

@@ -12,7 +12,7 @@ const int Ultrasonic::NUMBER_OF_MEASSURES = 8;
 Ultrasonic::Ultrasonic()
 {
 	actIndex = 0;
-	distance = 0.0;
+    distance = 999;
 	distances[8];
     pinMode(TRIG, OUTPUT);
     pinMode(ECHO, INPUT);
@@ -37,7 +37,6 @@ void Ultrasonic::startMeassurement()
     	actIndex = actIndex == 7 ? 0 : actIndex + 1;
         this->distance = median(distances, 8, actIndex);
         delay(100);
-        emit receiveDistance(distance);
     }
 }
 double Ultrasonic::meassureDistance()

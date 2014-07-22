@@ -44,6 +44,7 @@ void Stepper::clockwise(int steps){
     if(thread->isRunning()){
         //TODO freezing program
         //thread->terminate();
+        qDebug()<<"thread already running";
     }
     //thread->wait();
     this->steps = steps;
@@ -59,7 +60,7 @@ void Stepper::clockwise(int steps){
  */
 void Stepper::counterclockwise(int steps){
     if(thread->isRunning()){
-        //TODO freezing program
+        qDebug()<<"thread already running";
     }
     this->steps = steps;
     connect(thread,SIGNAL(started()),this,SLOT(counterclockwise()));

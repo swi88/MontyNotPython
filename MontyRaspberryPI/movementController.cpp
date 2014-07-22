@@ -29,7 +29,6 @@ MovementController::MovementController()
 }
 
 void MovementController::performMovement(int movementState) {
-	int distance;
 	soll = movementState;
 	servoAngle = servo->getCurrentAngle();
 	// ist-Wert aktualisieren
@@ -43,7 +42,8 @@ void MovementController::performMovement(int movementState) {
 		else soll = HOLD_POSITION;
 	}
 	// Falls Hindernis vor dem Ultraschallsensor erkannt..
-	if((ist & ZOOM_OUT_POSITION) == 0 && distance < 15) soll = ZOOM_OUT;
+
+    if((ist & ZOOM_OUT_POSITION) == 0 && ultrasonic->getDistance() < 15) zoomOut();
 	switch(soll) {
 	case MOVE_UP: moveUp();
 	break;
@@ -98,7 +98,7 @@ void MovementController::zoomIn()
 {
     qDebug()<<"zoomIn()";
 	if(!stepperZoom->isActive()) {
-        stepperZoom->clockwise(50);
+        stepperZoom->counterclockwise(50);
     	if(buttonZoom->isPressed()) ist |= ZOOM_IN_POSITION;
     	else ist &= ZOOM_RESET_MASK;
 	}
@@ -108,7 +108,7 @@ void MovementController::zoomOut()
 {
     qDebug()<<"zoomOut()";
 	if(!stepperZoom->isActive()) {
-        stepperZoom->counterclockwise(50);
+        stepperZoom->clockwise(50);
     	if(buttonZoom->isPressed()) ist |= ZOOM_OUT_POSITION;
     	else ist &= ZOOM_RESET_MASK;
 	}
