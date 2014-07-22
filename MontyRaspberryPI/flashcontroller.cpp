@@ -13,8 +13,9 @@ FlashController::FlashController()
 
     thread = new QThread();
     connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
-    connect(thread, SIGNAL(started()), this, SLOT(meassureBrigtness()));
+    //connect(thread, SIGNAL(started()), this, SLOT(meassureBrigtness()));
     this->moveToThread(thread);
+    thread->start();
 }
 
 void FlashController::checkImage(Mat picture)
@@ -22,7 +23,7 @@ void FlashController::checkImage(Mat picture)
     if(thread->isFinished() && time.elapsed()>TIME_TO_WAIT){
         time.restart();
         this->picture = picture;
-        thread->start();
+        meassureBrigtness();
     }
 }
 

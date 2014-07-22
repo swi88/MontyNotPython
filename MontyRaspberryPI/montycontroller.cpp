@@ -3,6 +3,8 @@
 
 MontyController::MontyController()
 {
+    qRegisterMetaType< cv::Mat >("cv::Mat");
+    qRegisterMetaType< Mat >("Mat");
 	infoState = CONTROLL_MANUAL;
     server = new Server();
     connect(server,SIGNAL(takePicture()),this,SLOT(takePicture()));
@@ -12,8 +14,8 @@ MontyController::MontyController()
     connect(server,SIGNAL(zoomOut()),this,SLOT(zoomOut()));
     connect(server,SIGNAL(armUp()),this,SLOT(armUp()));
     connect(server,SIGNAL(armDown()),this,SLOT(armDown()));
-    connect(server,SIGNAL(automaticOff(),this,SLOT(stopAutoControl());
-    connect(server,SIGNAL(automaticOn(),this,SLOT(autoControl());
+    connect(server,SIGNAL(automaticOff()),this,SLOT(stopAutoControl()));
+    connect(server,SIGNAL(automaticOn()),this,SLOT(autoControl()));
     server->listen();
 
     camera = new Camera();
@@ -59,12 +61,13 @@ void MontyController::takePicture()
 {
 	Mat* picture;
 	emit grab(picture);
-    flashController->checkImage(picture);
+    flashController->checkImage(*picture);
 	this->savePicture(*picture);
 }
 
 void MontyController::savePicture(Mat picture)
 {
+    ledController->setInfoLEDState(TAKE_PHOTO);
     // get current timestamp
     time_t rawtime;
     struct tm * timeinfo;

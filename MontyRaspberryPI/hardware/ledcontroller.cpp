@@ -49,8 +49,14 @@ void LEDController::setInfoLEDState(InfoState state)
     }
     case TAKE_PHOTO:{
         //blinking
-        setLEDs();
-
+        int oldCode = this->codeInfoCurrent;
+        for (int i = 0; i < 5; i++) {
+            this->codeInfoCurrent =CODE_INFO_LED_TAKE_PICTURE & CODE_INFO_LED_TAKE_PICTURE;
+            setLEDs();
+            delay(50);
+            this->codeInfoCurrent =oldCode;
+            delay(50);
+        }
         setInfoLEDState(controllModeCurrent);
         break;
     }

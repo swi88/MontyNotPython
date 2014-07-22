@@ -54,9 +54,11 @@ AutomaticControl::AutomaticControl()
 
 void AutomaticControl::update(Mat picture)
 {
-	resize(picture, frame, Size(640, 480));
+	qDebug()<<"update automaticv controll";
+	resize(picture, frame, Size(320, 240));
 	cvtColor(frame, frame, CV_BGR2GRAY);
     frame = picture;
+	qDebug()<<"resizte end";
 	if(xSize == -1)
 	{
 		xSize = frame.cols;
@@ -71,9 +73,14 @@ void AutomaticControl::update(Mat picture)
 		fxBufHigh = xSize;
 		fxBuf[0] = xSize;
 		fyBuf[0] = ySize;
+        colsBorder = xSize - 6;
+        rowsBorder = ySize - 6;
+
 	}
 	//update the background model
+	qDebug()<<"background sub 0";
 	pMOG->operator()(frame, fgMaskMOG, 0.25);
+	qDebug()<<"backgroud sub 1";
 	//rauschen entfernen
 	dilate(fgMaskMOG, fgMaskMOG, elem);
 	//eckpunkte finden, falls Bewegung vorhanden
@@ -84,8 +91,6 @@ void AutomaticControl::update(Mat picture)
 	tmp = 5;
 	tmp2 = 5;
 	moveDetected = true;
-	colsBorder = fgMaskMOG.cols - 6;
-	rowsBorder = fgMaskMOG.rows - 6;
 	for (fx = 5; fx < colsBorder && fgMaskMOG.row(tmp2).data[fx] < 127; fx++)
 		for (tmp2 = 5; tmp2 < rowsBorder && fgMaskMOG.row(tmp2).data[fx] < 127; tmp2++);
 	for (fy = 5; fy < tmp2 && fgMaskMOG.row(fy).data[tmp] < 127; fy++)
@@ -136,7 +141,6 @@ void AutomaticControl::update(Mat picture)
 		}
 
 		bufIdx = bufIdx == 9 ? 0 : bufIdx + 1;
-
 		//define movement
 		if(lxBufHigh - fxBufHigh > xSizeThreeFourth) emit move(ZOOM_OUT);
 		else if(lyBufHigh > ySizeThreeFourth) emit move(MOVE_DOWN);
@@ -152,4 +156,5 @@ void AutomaticControl::update(Mat picture)
             time.restart();
 		}
 	}
+	qDebug()<<"end automatic controll";
 }

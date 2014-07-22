@@ -2,6 +2,7 @@
 #include <string>
 Servo::Servo(int pin){
 	this->pin=pin; 
+	setValue(160);
 }
 Servo::~Servo(){
 	fclose(fp);
@@ -20,6 +21,8 @@ void Servo::setValue(int value){
 	fclose(fp);
 	qDebug()<<"ready";
 	this->value = value;
+	this->angle = calcAngle(value);
+	qDebug()<<"value"<<value<<" angle:"<<angle;
 
 }
 

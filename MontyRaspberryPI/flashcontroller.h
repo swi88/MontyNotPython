@@ -14,9 +14,12 @@ class FlashController : public QObject
     Q_OBJECT
 public:
     FlashController();
+
 signals:
     void setFlash(MouthState state);
 
+public slots:
+	void checkImage(Mat picture);
 
 private:
 
@@ -32,7 +35,6 @@ private:
     double calcHistogramQuantile(double quantile, Mat hist);
 
 private slots:
-    void checkImage(Mat picture);
     void meassureBrigtness();
 
 
