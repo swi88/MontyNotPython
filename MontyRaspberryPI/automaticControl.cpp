@@ -9,11 +9,14 @@ using namespace std;
 
 
 const int AutomaticControl::LAST_PICTURE = 60;
+const int AutomaticControl::LAST_MOVE = 3;
 AutomaticControl::AutomaticControl()
 {
 	pMOG = new BackgroundSubtractorMOG();
     time.start();
     time.addSecs(120);
+    moveTime.start();
+    moveTime.addSecs(6);
 	moveDetected = false;
 	pictureCaptured = false;
 	moving = false;
@@ -113,7 +116,7 @@ void AutomaticControl::update(Mat picture)
 		fxBuf[bufIdx] = fx;
 		if(tmp == fxBufHigh) {
 			fxBufHigh = xSize;
-			for(tmp2 = 0; tmp2 < 10; tmp2++)
+			for(tmp2 = 0; tmp2 < 8; tmp2++)
 				if(fxBuf[tmp2] < fxBufHigh)
 					fxBufHigh = fxBuf[tmp2];
 		}
@@ -121,7 +124,7 @@ void AutomaticControl::update(Mat picture)
 		lxBuf[bufIdx] = lx;
 		if(tmp == lxBufHigh) {
 			lxBufHigh = 0;
-			for(tmp2 = 0; tmp2 < 10; tmp2++)
+			for(tmp2 = 0; tmp2 < 8; tmp2++)
 				if(lxBuf[tmp2] > lxBufHigh)
 					lxBufHigh = lxBuf[tmp2];
 		}
@@ -129,7 +132,7 @@ void AutomaticControl::update(Mat picture)
 		fyBuf[bufIdx] = fy;
 		if(tmp == fyBufHigh) {
 			fyBufHigh = ySize;
-			for(tmp2 = 0; tmp2 < 10; tmp2++)
+			for(tmp2 = 0; tmp2 < 8; tmp2++)
 				if(fyBuf[tmp2] < fyBufHigh)
 					fyBufHigh = fyBuf[tmp2];
 		}
@@ -137,20 +140,25 @@ void AutomaticControl::update(Mat picture)
 		lyBuf[bufIdx] = ly;
 		if(tmp == lyBufHigh) {
 			lyBufHigh = 0;
-			for(tmp2 = 0; tmp2 < 10; tmp2++)
+			for(tmp2 = 0; tmp2 < 8; tmp2++)
 				if(lyBuf[tmp2] > lyBufHigh)
 					lyBufHigh = lyBuf[tmp2];
 		}
 
-		bufIdx = bufIdx == 9 ? 0 : bufIdx + 1;
-		qDebug()<<"define movement..";
-		//define movement
-		if(lxBufHigh - fxBufHigh > xSizeThreeFourth) emit move(ZOOM_OUT);
-		else if(lyBufHigh > ySizeThreeFourth) emit move(MOVE_DOWN);
-		else if(lxBufHigh >= colsBorder - 5) emit move(MOVE_RIGHT);
-		else if(fxBufHigh <= 10) emit move(MOVE_LEFT);
-		else if(lyBufHigh < ySizeHalf) emit move(MOVE_UP);
-		else if(lxBufHigh - fxBufHigh < xSizeHalf) emit move(ZOOM_IN);
+		bufIdx = bufIdx == 7 ? 0 : bufIdx + 1;
+		if(moveTime.elapsed() > LAST_MOVE)
+		{
+			qDebug()<<"define movement..";
+			//define movement
+			if(lxBufHigh - fxBufHigh > xSizeThreeFourth) emit move(ZOOM_OUT);
+			else if(lyBufHigh > ySizeThreeFourth) emit move(MOVE_DOWN);
+			else if(lxBufHigh >= colsBorder - 5) emit move(MOVE_RIGHT);
+			else if(fxBufHigh <= 10) emit move(MOVE_LEFT);
+			else if(lyBufHigh < ySizeHalf) emit move(MOVE_UP);
+			else if(lxBufHigh - fxBufHigh < xSizeHalf) emit move(ZOOM_IN);
+			else qDebug()<<"hold position";
+			moveTime.restart();
+		}
 	} else {
 		qDebug()<<"no movement detected..";
 		// Falls noch kein Foto dieser ruhigen Szene gemacht wurde, mache nun eines.

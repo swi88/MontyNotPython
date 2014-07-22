@@ -22,6 +22,7 @@ Camera::Camera()
     thread = new QThread();
     this->moveToThread(thread);
     connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
+
     thread->start();
 
 }
@@ -48,6 +49,7 @@ void Camera::startAutomatic()
 
 void Camera::stopAutomatic()
 {
+    cerr<<"stop camera"<<endl;
 	end = true;
 }
 

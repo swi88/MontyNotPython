@@ -62,9 +62,17 @@ void Server::on_readyRead()
 {
     qDebug() << "read input";
     QByteArray tlength = socket->read(4); // read int32
+    if(tlength.isNull()){
+            qDebug()<<"server: bytes are null";
+    }
     int length = int_from_bytes(tlength.data(), true);
+    qDebug()<<"read "<<length<<" bytes from client";
+    
     socket->waitForReadyRead();
     QByteArray message = socket->read(length);
+    if(message.isNull()){
+        qDebug()<<"message is null";
+    }
 
     if(strcmp(message.constData(), QUIT_COMMAND) == 0)
     {
