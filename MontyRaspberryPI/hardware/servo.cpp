@@ -2,7 +2,7 @@
 #include <string>
 Servo::Servo(int pin){
 	this->pin=pin; 
-	setValue(160);
+    setValue(145);
 }
 Servo::~Servo(){
 	fclose(fp);
@@ -53,5 +53,5 @@ void Servo::changeAngle(int degree)
 
 void Servo::setAngle(int degree)
 {
-    setValue(degree*(190.0/180.0));
+    setValue(degree*(190.0/180.0)+50);
 }

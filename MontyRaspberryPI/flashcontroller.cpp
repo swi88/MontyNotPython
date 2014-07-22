@@ -20,7 +20,9 @@ FlashController::FlashController()
 
 void FlashController::checkImage(Mat picture)
 {
+    qDebug()<<"check image";
     if(thread->isFinished() && time.elapsed()>TIME_TO_WAIT){
+        qDebug()<<"check image 2";
         time.restart();
         this->picture = picture;
         meassureBrigtness();
