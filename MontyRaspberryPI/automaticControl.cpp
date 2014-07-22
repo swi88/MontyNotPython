@@ -57,7 +57,6 @@ void AutomaticControl::update(Mat picture)
 	qDebug()<<"resize picture..";
 	resize(picture, frame, Size(640, 480), 8.3, 8.3, INTER_LANCZOS4);
 	cvtColor(frame, frame, CV_BGR2GRAY);
-    frame = picture;
 	if(xSize == -1)
 	{
 		qDebug()<<"init buffer..";

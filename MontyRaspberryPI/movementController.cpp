@@ -33,8 +33,8 @@ void MovementController::performMovement(int movementState) {
 	soll = movementState;
 	servoAngle = servo->getCurrentAngle();
 	// ist-Wert aktualisieren
-	if(servoAngle <= -45) ist |= LOWER_END_REACHED;
-	else if(servoAngle >= 45) ist |= UPPER_END_REACHED;
+	if(servoAngle <= 0) ist |= LOWER_END_REACHED;
+	else if(servoAngle >= 90) ist |= UPPER_END_REACHED;
 	else ist &= SERVO_RESET_MASK;
 	// falls Grenzwert für die Bewegung bereits erreicht..
 	if((soll & ist) != 0) {
@@ -80,7 +80,7 @@ void MovementController::moveDown()
 void MovementController::moveLeft()
 {
     if(!stepperRotate->isActive()) {
-        stepperRotate->counterclockwise(50);
+        stepperRotate->clockwise(50);
     	if(buttonRotate->isPressed()) ist |= LEFT_END_REACHED;
     	else ist &= ROTATION_RESET_MASK;
     }
@@ -89,7 +89,7 @@ void MovementController::moveLeft()
 void MovementController::moveRight()
 {
 	if(!stepperRotate->isActive()) {
-        stepperRotate->clockwise(20);
+        stepperRotate->counterclockwise(50);
     	if(buttonRotate->isPressed()) ist |= RIGHT_END_REACHED;
     	else ist &= ROTATION_RESET_MASK;
 	}
@@ -98,7 +98,7 @@ void MovementController::moveRight()
 void MovementController::zoomIn()
 {
 	if(!stepperZoom->isActive()) {
-        stepperZoom->clockwise(20);
+        stepperZoom->clockwise(50);
     	if(buttonZoom->isPressed()) ist |= ZOOM_IN_POSITION;
     	else ist &= ZOOM_RESET_MASK;
 	}
@@ -107,7 +107,7 @@ void MovementController::zoomIn()
 void MovementController::zoomOut()
 {
 	if(!stepperZoom->isActive()) {
-        stepperZoom->counterclockwise(20);
+        stepperZoom->counterclockwise(50);
     	if(buttonZoom->isPressed()) ist |= ZOOM_OUT_POSITION;
     	else ist &= ZOOM_RESET_MASK;
 	}
