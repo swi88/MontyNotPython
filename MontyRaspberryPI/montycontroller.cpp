@@ -70,15 +70,20 @@ void MontyController::savePicture(Mat picture)
     strftime (nameBuffer,80,"picture_%F_%T.png",timeinfo);
 
     qDebug()<<"save picture..";
-    if(picture == NULL)
+    if(imwrite(nameBuffer, picture))
     {
-    	qDebug()<<"picture object empty!";
+		qDebug()<<"picture saved!";
+
+		// send picture back to client
+		if(server->sendPicture(QString::fromLatin1(nameBuffer)))
+			qDebug()<<"picture sent";
+		else
+			qDebug()<<"can not send the picture!";
     }
-    imwrite(nameBuffer, picture);
-    qDebug()<<"picture saved!";
-    
-    // send picture back to client
-    server->sendPicture(QString::fromLatin1(nameBuffer));
+    else
+    {
+    	qDebug()<<"cancel: can not save the picture!";
+    }
 }
 
 void MontyController::rotateLeft()
