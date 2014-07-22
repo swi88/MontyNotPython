@@ -65,7 +65,7 @@ void AutomaticControl::update(Mat picture)
 		fxBuf[0] = xSize;
 		fyBuf[0] = ySize;
 	}
-	frame = *picture;
+    frame = picture;
 	//update the background model
 	pMOG->operator()(frame, fgMaskMOG, 0.25);
 	//rauschen entfernen

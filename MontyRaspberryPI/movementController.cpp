@@ -10,13 +10,17 @@
 
 MovementController::MovementController()
 {
+	buttonRotate = new Button(Button::ROTATE_BUTTON);
+	buttonZoom = new Button(Button::ZOOM_BUTTON);
 	wiringPiSetup();
 	soll = HOLD_POSITION;
 	ist = FLEXIBLE_POSITION;
 	ultrasonic = new Ultrasonic();
-	stepperRotate = new Stepper(2,3,4,11);
-	stepperZoom = new Stepper(17,10,27,22);
-	servo = new Servo(2);
+    //stepper rotate at pin  2,3,4,11 (wiring pi pins 8,9,7,14)
+    stepperRotate = new Stepper(8,9,7,14);
+    //stepper zoom at Pin 17,10,27,22; (wiring pi pins 0,12,2,3)
+    stepperZoom = new Stepper(0,12,2,3);
+    servo = new Servo(0);
     thread = new QThread();
     this->moveToThread(thread);
     connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
@@ -61,34 +65,50 @@ void MovementController::performMovement(int movementState) {
 
 void MovementController::moveUp()
 {
-	servo->setValue(servoAngle - 2);
-	servo->setValue(servoAngle - 1);
+    servo->setAngle(servoAngle - 2);
+    servo->setAngle(servoAngle - 1);
 	servoAngle = servo->getCurrentAngle();
 }
 
 void MovementController::moveDown()
 {
-	servo->setValue(servoAngle + 2);
-	servo->setValue(servoAngle + 1);
+    servo->setAngle(servoAngle + 2);
+    servo->setAngle(servoAngle + 1);
 	servoAngle = servo->getCurrentAngle();
 }
 
 void MovementController::moveLeft()
 {
-	if(!stepperRotate->isActive()) stepperRotate->counterclockwise(5);
+    if(!stepperRotate->isActive()) {
+        stepperRotate->counterclockwise(50);
+    	if(buttonRotate->isPressed()) ist |= LEFT_END_REACHED;
+    	else ist &= ROTATION_RESET_MASK;
+    }
 }
 
 void MovementController::moveRight()
 {
-	if(!stepperRotate->isActive()) stepperRotate->clockwise(5);
+	if(!stepperRotate->isActive()) {
+        stepperRotate->clockwise(50);
+    	if(buttonRotate->isPressed()) ist |= RIGHT_END_REACHED;
+    	else ist &= ROTATION_RESET_MASK;
+	}
 }
 
 void MovementController::zoomIn()
 {
-	if(!stepperZoom->isActive()) stepperZoom->clockwise(5);
+	if(!stepperZoom->isActive()) {
+        stepperZoom->clockwise(50);
+    	if(buttonZoom->isPressed()) ist |= ZOOM_IN_POSITION;
+    	else ist &= ZOOM_RESET_MASK;
+	}
 }
 
 void MovementController::zoomOut()
 {
-	if(!stepperZoom->isActive()) stepperZoom->counterclockwise(5);
+	if(!stepperZoom->isActive()) {
+        stepperZoom->counterclockwise(50);
+    	if(buttonZoom->isPressed()) ist |= ZOOM_OUT_POSITION;
+    	else ist &= ZOOM_RESET_MASK;
+	}
 }

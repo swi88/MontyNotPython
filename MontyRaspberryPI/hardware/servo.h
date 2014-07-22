@@ -17,6 +17,7 @@ public:
 	void setValue(int value);
     int getCurrentAngle();
     void wait();
+    void setAngle(int degree);
 private:
 	int pin;
     int angle;
@@ -25,5 +26,6 @@ private:
     int calcAngle(int pwm);
     int calcPWM(int angle);
     void changeAngle(int degree);
+
 };
 #endif
