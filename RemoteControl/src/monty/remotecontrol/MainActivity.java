@@ -192,10 +192,10 @@ public class MainActivity extends Activity {
 						command = ROTATE_RIGHT;
 						break;
 					case R.id.button1Up:
-						command = ZOOM_OUT;
+						command = ZOOM_IN;
 						break;
 					case R.id.button1Down:
-						command = ZOOM_IN;
+						command = ZOOM_OUT;
 						break;
 					case R.id.button2Up:
 						command = ARM_UP;
