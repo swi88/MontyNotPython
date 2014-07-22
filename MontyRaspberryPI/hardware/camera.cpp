@@ -35,9 +35,10 @@ void Camera::startAutomatic()
 	end = false;
 	while(!end)
     {
-        capture.grab();
-        capture.retrieve ( frame);
-        emit update(frame);
+        if(capture.grab() && capture.retrieve(frame))
+        	emit update(frame);
+        else
+    		qDebug()<<"grabbing failed, trying again..";
 	}
 }
 
@@ -49,21 +50,16 @@ void Camera::stopAutomatic()
 void Camera::grab(Mat* picture)
 {
 	int tries = 0;
-	do {
-		capture.grab();
-		capture.retrieve (frame);
-	    picture = &frame;
-		if(picture == nullptr)
+	while(!(capture.grab() && capture.retrieve(frame))) {
+		qDebug()<<"frame empty, trying to grab again..";
+		tries++;
+		if(tries == 4)
 		{
-			qDebug()<<"frame empty, try to grab again..";
-			tries++;
-			if(tries == 4)
-			{
-				qDebug()<<"grabbing failed!";
-				return;
-			}
+			qDebug()<<"grabbing failed!";
+			return;
 		}
-	} while (picture == nullptr);
+	}
+    picture = &frame;
 	qDebug()<<"frame grabbed!";
     /**
 	if (!capture.read(frame)) {
