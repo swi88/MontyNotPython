@@ -150,12 +150,12 @@ void AutomaticControl::update(Mat picture)
 		{
 			qDebug()<<"define movement..";
 			//define movement
-			if(lxBufHigh - fxBufHigh > xSizeThreeFourth) emit move(ZOOM_OUT);
-			else if(lyBufHigh > ySizeThreeFourth) emit move(MOVE_DOWN);
+			if(lyBufHigh > ySizeThreeFourth) emit move(MOVE_DOWN);
 			else if(lxBufHigh >= colsBorder - 5) emit move(MOVE_RIGHT);
 			else if(fxBufHigh <= 10) emit move(MOVE_LEFT);
 			else if(lyBufHigh < ySizeHalf) emit move(MOVE_UP);
 			else if(lxBufHigh - fxBufHigh < xSizeHalf) emit move(ZOOM_IN);
+			else if(lxBufHigh - fxBufHigh > xSizeThreeFourth) emit move(ZOOM_OUT);
 			else qDebug()<<"hold position";
 			moveTime.restart();
 		}
