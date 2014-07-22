@@ -50,7 +50,14 @@ void MontyController::autoControl()
 void MontyController::stopAutoControl()
 {
 	this->infoState = CONTROLL_MANUAL;
-	emit stopAutomatic();
+    emit stopAutomatic();
+	this->camera->~Camera();
+	this->camera = new Camera();
+    connect(camera, SIGNAL(update(Mat)), automaticControl, SLOT(update(Mat)));
+    connect(this, SIGNAL(startAutomatic()), camera, SLOT(startAutomatic()));
+    connect(this, SIGNAL(stopAutomatic()), camera, SLOT(stopAutomatic()));
+    connect(this, SIGNAL(grab(Mat*)), camera, SLOT(grab(Mat*)));
+    connect(camera, SIGNAL(update(Mat)), flashController, SLOT(checkImage(Mat)));
 }
 
 void MontyController::receiveUltrasonicDistance(double value)
