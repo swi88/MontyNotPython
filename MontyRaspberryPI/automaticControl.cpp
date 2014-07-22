@@ -56,8 +56,6 @@ AutomaticControl::AutomaticControl()
 
 void AutomaticControl::update(Mat picture)
 {
-	if(!(moveTime.elapsed() > LAST_PICTURE))
-		return;
 	qDebug()<<"resize picture..";
 	resize(picture, frame, Size(640, 480), 8.3, 8.3, INTER_LANCZOS4);
 	cvtColor(frame, frame, CV_BGR2GRAY);
@@ -147,16 +145,19 @@ void AutomaticControl::update(Mat picture)
 		}
 
 		bufIdx = bufIdx == 7 ? 0 : bufIdx + 1;
-		qDebug()<<"define movement..";
-		//define movement
-		if(lxBufHigh - fxBufHigh > xSizeThreeFourth) emit move(ZOOM_OUT);
-		else if(lyBufHigh > ySizeThreeFourth) emit move(MOVE_DOWN);
-		else if(lxBufHigh >= colsBorder - 5) emit move(MOVE_RIGHT);
-		else if(fxBufHigh <= 10) emit move(MOVE_LEFT);
-		else if(lyBufHigh < ySizeHalf) emit move(MOVE_UP);
-		else if(lxBufHigh - fxBufHigh < xSizeHalf) emit move(ZOOM_IN);
-		else qDebug()<<"hold position";
-		moveTime.restart();
+		if(moveTime.elapsed() > LAST_PICTURE)
+		{
+			qDebug()<<"define movement..";
+			//define movement
+			if(lxBufHigh - fxBufHigh > xSizeThreeFourth) emit move(ZOOM_OUT);
+			else if(lyBufHigh > ySizeThreeFourth) emit move(MOVE_DOWN);
+			else if(lxBufHigh >= colsBorder - 5) emit move(MOVE_RIGHT);
+			else if(fxBufHigh <= 10) emit move(MOVE_LEFT);
+			else if(lyBufHigh < ySizeHalf) emit move(MOVE_UP);
+			else if(lxBufHigh - fxBufHigh < xSizeHalf) emit move(ZOOM_IN);
+			else qDebug()<<"hold position";
+			moveTime.restart();
+		}
 	} else {
 		qDebug()<<"no movement detected..";
 		// Falls noch kein Foto dieser ruhigen Szene gemacht wurde, mache nun eines.
