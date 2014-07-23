@@ -84,7 +84,8 @@ void AutomaticControl::update(Mat picture)
 	}
 	//update the background model
 	qDebug()<<"background subtraction..";
-	pMOG->operator()(frame, fgMaskMOG, 0.25);
+	if(moveTime.elapsed() / 1000 > LAST_MOVE) pMOG->operator()(frame, fgMaskMOG, 0.25);
+	else pMOG->operator()(frame, fgMaskMOG, 1.00);
 	//rauschen entfernen
 	qDebug()<<"noise reduction..";
 	dilate(fgMaskMOG, fgMaskMOG, elem);
@@ -149,7 +150,7 @@ void AutomaticControl::update(Mat picture)
 		}
 
 		bufIdx = bufIdx == 7 ? 0 : bufIdx + 1;
-		if(moveTime.elapsed() > LAST_MOVE)
+		if(moveTime.elapsed() / 1000 > LAST_MOVE)
 		{
 			qDebug()<<"define movement..";
 			//define movement
@@ -170,7 +171,7 @@ void AutomaticControl::update(Mat picture)
 	} else {
 		qDebug()<<"no movement detected..";
 		// Falls noch kein Foto dieser ruhigen Szene gemacht wurde, mache nun eines.
-        if(!pictureCaptured  && time.elapsed() > LAST_PICTURE) {
+        if(!pictureCaptured  && time.elapsed() / 1000 > LAST_PICTURE) {
         	qDebug()<<"new picture command..";
 			emit savePicture(picture);
 			pictureCaptured = true;
