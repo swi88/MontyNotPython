@@ -41,12 +41,8 @@ void Camera::startAutomatic()
     end = false;
     while(!end)
     {
-        if(capture.grab()){
-            capture.retrieve(frame);
-        	this->automaticControl->update(frame);
-        }
-        else
-            cerr<<"grabbing failed, trying again.."<<endl;
+        frame = grab();
+        this->automaticControl->update(frame);
 	}
 }
 
@@ -70,6 +66,7 @@ Mat Camera::grab()
 		}
 	}
     capture.retrieve(frame);
+    emit update(frame);
     qDebug()<<"frame grabbed!";
     return frame;
     /**
@@ -77,4 +74,51 @@ Mat Camera::grab()
 		cerr << "Unable to read next frame." << endl;
 	} else picture = &frame;
     **/
+}
+
+void Camera::takePicture()
+{
+    qDebug()<<"takePicture: start";
+    Mat picture = grab();
+    if(picture.cols > 1 && picture.rows > 1)
+    {
+        qDebug()<<"takePicture: before savePicture";
+        this->savePicture(picture);
+        qDebug()<<"takePicture: end";
+    }
+    else qDebug()<<"can not save the picture";
+}
+
+void Camera::savePicture(Mat picture)
+{
+
+    emit setInfoLEDState(TAKE_PHOTO);
+    // get current timestamp
+    time_t rawtime;
+    struct tm * timeinfo;
+    char nameBuffer [80];
+    time (&rawtime);
+    timeinfo = localtime (&rawtime);
+    strftime (nameBuffer,80,"picture_%F_%T.png",timeinfo);
+
+    qDebug()<<"save picture..";
+    if (!picture.data)
+    {
+        qDebug()<<"No image data...";
+    }
+    if(imwrite(nameBuffer, picture))
+    {
+        imwrite("last.png", picture);
+        qDebug()<<"picture saved!";
+
+        // send picture back to client
+        //if(server->sendPicture(QString::fromLatin1(nameBuffer)))
+        //	qDebug()<<"picture sent";
+        //else
+        //	qDebug()<<"can not send the picture!";
+    }
+    else
+    {
+        qDebug()<<"cancel: can not save the picture!";
+    }
 }

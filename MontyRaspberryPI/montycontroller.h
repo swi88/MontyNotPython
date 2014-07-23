@@ -42,8 +42,6 @@ private:
 
 private slots:
     void receiveUltrasonicDistance(double value);
-    void takePicture();
-    void savePicture(Mat picture);
     void rotateLeft();
     void rotateRight();
     void zoomIn();

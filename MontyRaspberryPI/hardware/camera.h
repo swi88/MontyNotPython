@@ -16,6 +16,7 @@
 #include <QDebug>
 #include <automaticControl.h>
 #include <movementController.h>
+#include "util/ledstate.h"
 
 using namespace cv;
 
@@ -25,12 +26,14 @@ class Camera : public QObject
 public:
     Camera(MovementController* controller);
     ~Camera();
-	Mat grab();
-	signals:
+    Mat grab();
+signals:
     void update(Mat picture);
+    void setInfoLEDState(InfoState state);
 
 public slots:
         void stopAutomatic(void);
+        void takePicture();
 private:
 	QThread* thread;
     AutomaticControl* automaticControl;
@@ -39,8 +42,10 @@ private:
 
     //VideoCapture capture;
 
-	Mat frame;
+    Mat frame;
 private slots:
+
+    void savePicture(Mat picture);
 	void startAutomatic(void);
 };
 

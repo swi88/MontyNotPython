@@ -24,6 +24,7 @@ void Button::checkButtonState()
 {
     while (1) {
         if(!(digitalRead(pin) == pressed)){
+            qDebug()<<"button"<<pin<<" changed";
             pressed = !pressed;
         }
 

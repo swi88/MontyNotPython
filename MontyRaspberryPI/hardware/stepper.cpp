@@ -27,9 +27,7 @@ Stepper::Stepper(int pin1, int pin2,int pin3, int pin4){
     digitalWrite(pin4, LOW);
     thread = new QThread();
     this->moveToThread(thread);
-    connect(this, SIGNAL(finished()), thread, SLOT(terminate()));
-    connect(thread, SIGNAL(finished()), this, SLOT(switchActiveState()));
-    connect(thread, SIGNAL(started()), this, SLOT(switchActiveState()));
+    connect(this, SIGNAL(finished()), thread, SLOT(quit());
 
 
 }
@@ -160,6 +158,7 @@ void Stepper::sequence8()
  */
 void Stepper::clockwise()
 {
+    switchActiveState();
     for(int counter=0; counter<steps; counter++){
         sequence1();
         sequence2();
@@ -173,12 +172,15 @@ void Stepper::clockwise()
     disconnect(thread,SIGNAL(started()),this,SLOT(clockwise()));
     qDebug()<<"end cw of stepper "<<gpios.at(0);
     emit finished();
+    switchActiveState();
+
 }
 /**
  * @brief called by thread
  */
 void Stepper::counterclockwise()
 {
+    switchActiveState();
     for(int counter=0; counter<steps; counter++){
        sequence8();
        sequence7();
@@ -194,10 +196,13 @@ void Stepper::counterclockwise()
     disconnect(thread,SIGNAL(started()),this,SLOT(counterclockwise()));
     qDebug()<<"end ccw of stepper "<<gpios.at(0);
     emit finished();
+    switchActiveState();
+
 
 }
 
 void Stepper::switchActiveState()
 {
+    qDebug()<<"change active state of servo"<<gpios.at(0);
     this->active = !active;
 }
