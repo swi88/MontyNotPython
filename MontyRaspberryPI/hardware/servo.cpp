@@ -2,7 +2,7 @@
 #include <string>
 Servo::Servo(int pin){
 	this->pin=pin; 
-    setValue(118);
+    setValue(174);
 }
 Servo::~Servo(){
 	fclose(fp);
@@ -28,6 +28,7 @@ void Servo::setValue(int value){
 
 int Servo::getCurrentAngle()
 {
+    qDebug()<<"current angle: "<<angle;
     return angle;
 }
 

@@ -39,6 +39,15 @@ Camera::~Camera()
 void Camera::startAutomatic()
 {
     end = false;
+    forever{
+        lock.lockForRead();
+        if(end){
+            lock.unlock();
+            break;
+        }
+        lock.unlock();
+
+    }
     while(!end)
     {
         frame = grab();
@@ -49,7 +58,9 @@ void Camera::startAutomatic()
 void Camera::stopAutomatic()
 {
     qDebug()<<"stopping automatic controll....";
+    lock.lockForWrite();
     end = true;
+    lock.unlock();
 }
 
 Mat Camera::grab()
