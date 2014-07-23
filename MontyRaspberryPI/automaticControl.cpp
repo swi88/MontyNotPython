@@ -49,7 +49,7 @@ AutomaticControl::AutomaticControl(MovementController* movementController)
 	ySizeThreeFourth = -1;
 	lx = -1;
 	rowsBorder = -1;
-	elem = getStructuringElement(MORPH_ELLIPSE, Size(7, 7), Point(3, 3));
+	elem = getStructuringElement(MORPH_ELLIPSE, Size(3, 3), Point(1, 1));
 
     thread = new QThread();
     this->moveToThread(thread);
@@ -88,7 +88,7 @@ void AutomaticControl::update(Mat picture)
 	else pMOG->operator()(frame, fgMaskMOG, 1.00);
 	//rauschen entfernen
 	qDebug()<<"noise reduction..";
-	dilate(fgMaskMOG, fgMaskMOG, elem);
+	erode(fgMaskMOG, fgMaskMOG, elem);
 	//eckpunkte finden, falls Bewegung vorhanden
 	qDebug()<<"movement detection..";
 	fx = 0;
