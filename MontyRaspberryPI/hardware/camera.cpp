@@ -41,19 +41,15 @@ void Camera::startAutomatic()
     end = false;
     while(!end)
     {
-        mutex.lock();
         frame = grab();
         this->automaticControl->update(frame);
-        mutex.unlock();
 	}
 }
 
 void Camera::stopAutomatic()
 {
     qDebug()<<"stopping automatic controll....";
-    mutex.lock();
     end = true;
-    mutex.unlock();
 }
 
 Mat Camera::grab()

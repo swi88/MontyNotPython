@@ -2,7 +2,7 @@
 #include <string>
 Servo::Servo(int pin){
 	this->pin=pin; 
-    setValue(145);
+    setValue(118);
 }
 Servo::~Servo(){
 	fclose(fp);

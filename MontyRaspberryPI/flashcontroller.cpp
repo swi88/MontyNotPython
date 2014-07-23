@@ -57,8 +57,8 @@ void FlashController::meassureBrigtness()
         //qDebug()<<"exposure okay";
         emit setFlash(OFF);
     }else if(1-quantil80>0.3){
-        qDebug()<<"over exposure";
-        //emit setFlash(FLASH_ON);
+        //qDebug()<<"over exposure";
+        emit setFlash(FLASH_ON);
     }
     else{
         //qDebug()<<"under exposure";

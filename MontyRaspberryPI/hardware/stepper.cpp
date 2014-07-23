@@ -27,7 +27,7 @@ Stepper::Stepper(int pin1, int pin2,int pin3, int pin4){
     digitalWrite(pin4, LOW);
     thread = new QThread();
     this->moveToThread(thread);
-    connect(this, SIGNAL(finished()), thread, SLOT(quit());
+    connect(this, SIGNAL(finished()), thread, SLOT(quit()));
 
 
 }
