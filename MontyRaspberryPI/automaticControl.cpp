@@ -7,15 +7,11 @@
 
 using namespace std;
 
-
-const int AutomaticControl::LAST_PICTURE = 60;
 const int AutomaticControl::LAST_MOVE = 3;
 AutomaticControl::AutomaticControl(MovementController* movementController)
 {
 	pMOG = new BackgroundSubtractorMOG();
 	this->movementController = movementController;
-    time.start();
-    time.addSecs(120);
     moveTime.start();
     moveTime.addSecs(6);
 	moveDetected = false;
@@ -171,11 +167,10 @@ void AutomaticControl::update(Mat picture)
 	} else {
 		qDebug()<<"no movement detected..";
 		// Falls noch kein Foto dieser ruhigen Szene gemacht wurde, mache nun eines.
-        if(!pictureCaptured  && time.elapsed() / 1000 > LAST_PICTURE) {
+        if(!pictureCaptured  && moveTime.elapsed() / 1000 > LAST_MOVE) {
         	qDebug()<<"new picture command..";
 			emit savePicture(picture);
 			pictureCaptured = true;
-            time.restart();
 		}
 	}
 	qDebug()<<"end automatic controll";
