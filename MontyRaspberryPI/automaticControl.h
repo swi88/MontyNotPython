@@ -19,12 +19,14 @@ class AutomaticControl : public QObject
 {
 	Q_OBJECT
 public:
-	AutomaticControl();
+	AutomaticControl(MovementController* movementController);
+void update(Mat picture);
 signals:
 	void move(int movementState);
 	void savePicture(Mat picture);
 private:
 	QThread* thread;
+    MovementController* movementController;
 
 	// Bildobjekte
 	Mat frame;
@@ -79,8 +81,6 @@ private:
     int sollMask;
     const static int LAST_PICTURE;
     const static int LAST_MOVE;
-private slots:
-	void update(Mat picture);
 };
 
 #endif /* AUTOMATICCONTROL_H_ */

@@ -21,7 +21,7 @@ class Camera : public QObject
 {
 	Q_OBJECT
 public:
-	Camera();
+	Camera(MovementController*);
     ~Camera();
 	Mat grab();
 	signals:
@@ -31,6 +31,7 @@ public slots:
         void stopAutomatic(void);
 private:
 	QThread* thread;
+    AutomaticControl* automaticControl;
     raspicam::RaspiCam_Cv capture;
     //VideoCapture capture;
 	bool end;

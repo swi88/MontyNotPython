@@ -34,7 +34,6 @@ public slots:
 private:
 	int infoState;
     Server* server;
-    AutomaticControl* automaticControl;
     MovementController* movementController;
     LEDController* ledController;
     FlashController* flashController;

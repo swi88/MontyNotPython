@@ -9,9 +9,10 @@
 
 using namespace std;
 
-Camera::Camera()
+Camera::Camera(MovementController* movementController)
 {
     //capture(0);
+    automaticControl = new AutomaticControl(movementController);
     capture.set( CV_CAP_PROP_FORMAT, CV_8UC3 );
     capture.set(CV_CAP_PROP_FRAME_WIDTH, 1920);
     capture.set(CV_CAP_PROP_FRAME_HEIGHT, 1080);
@@ -22,6 +23,8 @@ Camera::Camera()
     thread = new QThread();
     this->moveToThread(thread);
     connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
+    connect(automaticControl, SIGNAL(move(int)), movementController, SLOT(performMovement(int)));
+    connect(automaticControl, SIGNAL(savePicture(Mat)),this,SLOT(savePicture(Mat)));
 
     thread->start();
 
@@ -40,7 +43,7 @@ void Camera::startAutomatic()
     {
         if(capture.grab()){
             capture.retrieve(frame);
-        	emit update(frame);
+        	this->automaticControl->update(frame);
         }
         else
             cerr<<"grabbing failed, trying again.."<<endl;

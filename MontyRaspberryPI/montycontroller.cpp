@@ -18,14 +18,10 @@ MontyController::MontyController()
     connect(server,SIGNAL(automaticOn()),this,SLOT(autoControl()));
     server->listen();
 
-    camera = new Camera();
-    automaticControl = new AutomaticControl();
     movementController = new MovementController();
-    connect(camera, SIGNAL(update(Mat)), automaticControl, SLOT(update(Mat)));
+    camera = new Camera(movementController);
     connect(this, SIGNAL(startAutomatic()), camera, SLOT(startAutomatic()));
     connect(this, SIGNAL(stopAutomatic()), camera, SLOT(stopAutomatic()));
-    connect(automaticControl, SIGNAL(move(int)), movementController, SLOT(performMovement(int)));
-    connect(automaticControl, SIGNAL(savePicture(Mat)),this,SLOT(savePicture(Mat)));
     connect(this, SIGNAL(move(int)), movementController, SLOT(performMovement(int)));
     //LED Controller at Pin 23,24,25 (wiring pi pins 4,5,6)
     ledController = new LEDController(4,5,6);
