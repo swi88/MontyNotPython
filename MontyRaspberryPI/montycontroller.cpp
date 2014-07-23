@@ -67,34 +67,38 @@ void MontyController::receiveUltrasonicDistance(double value)
     qDebug()<<value;
 }
 
-
-
 void MontyController::rotateLeft()
 {
-	emit move(MOVE_LEFT);
+    if (this->infoState == CONTROLL_MANUAL)
+        emit move(MOVE_LEFT);
 }
 
 void MontyController::rotateRight()
 {
-	emit move(MOVE_RIGHT);
+    if (this->infoState == CONTROLL_MANUAL)
+        emit move(MOVE_RIGHT);
 }
 
 void MontyController::zoomIn()
 {
-	emit move(ZOOM_IN);
+    if (this->infoState == CONTROLL_MANUAL)
+        emit move(ZOOM_IN);
 }
 
 void MontyController::zoomOut()
 {
-	emit move(ZOOM_OUT);
+    if (this->infoState == CONTROLL_MANUAL)
+        emit move(ZOOM_OUT);
 }
 
 void MontyController::armUp()
 {
-	emit move(MOVE_UP);
+    if (this->infoState == CONTROLL_MANUAL)
+        emit move(MOVE_UP);
 }
 
 void MontyController::armDown()
 {
-	emit move(MOVE_DOWN);
+    if (this->infoState == CONTROLL_MANUAL)
+        emit move(MOVE_DOWN);
 }

@@ -11,22 +11,28 @@ public final class R {
     public static final class attr {
     }
     public static final class drawable {
-        public static final int ic_launcher=0x7f020000;
+        public static final int down=0x7f020000;
+        public static final int ic_launcher=0x7f020001;
+        public static final int left=0x7f020002;
+        public static final int minus=0x7f020003;
+        public static final int picture=0x7f020004;
+        public static final int plus=0x7f020005;
+        public static final int right=0x7f020006;
+        public static final int up=0x7f020007;
     }
     public static final class id {
         public static final int button1Down=0x7f060007;
         public static final int button1Up=0x7f060006;
-        public static final int button2Down=0x7f06000b;
-        public static final int button2Up=0x7f06000a;
+        public static final int button2Down=0x7f06000a;
+        public static final int button2Up=0x7f060009;
         public static final int buttonRotateLeft=0x7f060003;
         public static final int buttonRotateRight=0x7f060004;
         public static final int buttonTakePicture=0x7f060001;
         public static final int imageView=0x7f060000;
         public static final int linear1Arm=0x7f060005;
-        public static final int linear2Arm=0x7f060009;
+        public static final int linear2Arm=0x7f060008;
         public static final int linearRotate=0x7f060002;
-        public static final int text1Arm=0x7f060008;
-        public static final int text2Arm=0x7f06000c;
+        public static final int switch1=0x7f06000b;
     }
     public static final class layout {
         public static final int activity_image=0x7f030000;
@@ -43,6 +49,7 @@ public final class R {
         public static final int server_not_connected=0x7f040002;
         public static final int server_not_reachable=0x7f040003;
         public static final int take_Picture=0x7f040004;
+        public static final int title_activity_image=0x7f04000b;
         public static final int title_activity_main=0x7f040001;
     }
     public static final class style {
