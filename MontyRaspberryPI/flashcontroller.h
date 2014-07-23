@@ -30,6 +30,7 @@ private:
     QTime time;
     int size;
     int histSize;
+    bool isRunning;
 
 
     double calcHistogramQuantile(double quantile, Mat hist);

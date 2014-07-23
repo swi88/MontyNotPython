@@ -157,6 +157,11 @@ void Stepper::sequence8()
     digitalWrite(gpios.at(3), LOW);
     digitalWrite(gpios.at(0), LOW);
 }
+
+void Stepper::switchState()
+{
+    active=!active;
+}
 /**
  * @brief clockwise, called by thread
  */
@@ -171,10 +176,9 @@ void Stepper::clockwise()
         sequence6();
         sequence7();
         sequence8();
-        cout << counter<<"\n";
     }
     disconnect(thread,SIGNAL(started()),this,SLOT(clockwise()));
-    qDebug()<<"end cw";
+    qDebug()<<"end cw of stepper "<<gpios.at(0);
     emit finished();
 }
 /**
@@ -195,7 +199,7 @@ void Stepper::counterclockwise()
         //cout << counter<<"\n";
     }
     disconnect(thread,SIGNAL(started()),this,SLOT(counterclockwise()));
-    qDebug()<<"end ccw";
+    qDebug()<<"end cw of stepper "<<gpios.at(0);
     emit finished();
 
 }

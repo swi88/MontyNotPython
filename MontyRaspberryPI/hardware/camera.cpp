@@ -49,7 +49,7 @@ void Camera::startAutomatic()
 
 void Camera::stopAutomatic()
 {
-    cerr<<"stop camera"<<endl;
+    qDebug(()<<"stopping automatic controll....";
 	end = true;
 }
 

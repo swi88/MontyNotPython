@@ -8,8 +8,7 @@ enum InfoState{
 };
 enum MouthState{
     FLASH_ON,
-    OFF,
-    START_ANIMATION
+    OFF
 };
 
 #endif // LEDSTATE_H

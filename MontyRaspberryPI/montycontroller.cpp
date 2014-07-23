@@ -37,28 +37,32 @@ MontyController::MontyController()
     flashController = new FlashController();
     connect(flashController,SIGNAL(setFlash(MouthState)),ledController,SLOT(setMouthLEDState(MouthState)));
     connect(camera,SIGNAL(update(Mat)),flashController,SLOT(checkImage(Mat)));
-    qDebug()<<"started";
+    //startup state
     //this->autoControl();
+    this->stopAutoControl();
+    qDebug()<<"started";
 }
 
+/**
+ * @brief automatic mode
+ */
 void MontyController::autoControl()
 {
+
+    qDebug()<<"server automatic controll on";
 	this->infoState = CONTROLL_AUTO;
     ledController->setInfoLEDState(CONTROLL_AUTO);
     emit startAutomatic();
 }
-
-void MontyController::manuelControl()
-{
-    this->infoState = CONTROLL_MANUAL;
-    ledController->setInfoLEDState(CONTROLL_MANUAL);
-}
-
+/**
+ * @brief manuel mode
+ */
 void MontyController::stopAutoControl()
 {
     qDebug()<<"server automatic controll off";
 	this->infoState = CONTROLL_MANUAL;
-    emit stopAutomatic();
+    ledController->setInfoLEDState(CONTROLL_MANUAL);
+    camera->stopAutomatic();
 }
 
 void MontyController::receiveUltrasonicDistance(double value)

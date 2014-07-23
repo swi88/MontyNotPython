@@ -7,6 +7,7 @@ FlashController::FlashController()
     //so first picture is using for controll
     time.start();
     time.addSecs(30);
+    isRunning = false;
 
     //init histogram
     this->histSize = 32;
@@ -21,11 +22,13 @@ FlashController::FlashController()
 void FlashController::checkImage(Mat picture)
 {
     qDebug()<<"check image";
-    if(thread->isFinished() && time.elapsed()>TIME_TO_WAIT){
+    if(!isRunning && time.elapsed()>TIME_TO_WAIT){
+        isRunning = true;
         qDebug()<<"check image 2";
         time.restart();
         this->picture = picture;
         meassureBrigtness();
+        isRunning = false;
     }
 }
 

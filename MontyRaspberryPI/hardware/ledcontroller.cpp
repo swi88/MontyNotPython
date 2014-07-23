@@ -20,15 +20,8 @@ LEDController::LEDController(int dataPin,int clockPin,int latchPin) :QObject()
     sr595Setup(pinBase,pinNumbers,dataPin,clockPin,latchPin);
     writeToRegisters(0);
     delay(100);
-    writeToRegisters(CODE_FLASH_ON);
-   delay(100);
-   writeToRegisters(CODE_FLASH_OFF);
-   writeToRegisters(CODE_INFO_LED_GREEN);
-
-   writeToRegisters(CODE_INFO_LED_TAKE_PICTURE);
-
-
-
+    //start animation
+    startUp();
  }
 
 void LEDController::setInfoLEDState(InfoState state)
@@ -51,7 +44,7 @@ void LEDController::setInfoLEDState(InfoState state)
         //blinking
         int oldCode = this->codeInfoCurrent;
         for (int i = 0; i < 5; i++) {
-            this->codeInfoCurrent =CODE_INFO_LED_TAKE_PICTURE & CODE_INFO_LED_TAKE_PICTURE;
+            this->codeInfoCurrent =CODE_INFO_LED_TAKE_PICTURE | codeInfoCurrent;
             setLEDs();
             delay(50);
             this->codeInfoCurrent =oldCode;
@@ -64,6 +57,23 @@ void LEDController::setInfoLEDState(InfoState state)
     default:
         break;
     }
+}
+
+void LEDController::startUp()
+{
+    writeToRegisters(1 | CODE_INFO_LED_GREEN);
+    delay(100);
+    writeToRegisters(3 | CODE_INFO_LED_GREEN);
+    delay(100);
+    writeToRegisters(7 | CODE_INFO_LED_GREEN);
+    delay(100);
+    writeToRegisters(15 | CODE_INFO_LED_GREEN);
+    delay(100);
+    writeToRegisters(31 | CODE_INFO_LED_GREEN);
+    delay(100);
+    writeToRegisters(CODE_FLASH_OFF | CODE_INFO_LED_GREEN);
+    delay(100);
+    writeToRegisters(CODE_INFO_LED_GREEN);
 }
 
 void LEDController::setMouthLEDState(MouthState state)
