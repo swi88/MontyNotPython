@@ -71,6 +71,16 @@ void LEDController::startUp()
     delay(100);
     writeToRegisters(31 | CODE_INFO_LED_GREEN);
     delay(100);
+    writeToRegisters(31 | CODE_INFO_LED_GREEN);
+    delay(100);
+    writeToRegisters(15 | CODE_INFO_LED_GREEN);
+    delay(100);
+    writeToRegisters(7 | CODE_INFO_LED_GREEN);
+    delay(100);
+    writeToRegisters(3 | CODE_INFO_LED_GREEN);
+    delay(100);
+    writeToRegisters(1 |  CODE_INFO_LED_GREEN);
+    delay(100);
     writeToRegisters(CODE_FLASH_OFF | CODE_INFO_LED_GREEN);
     delay(100);
     writeToRegisters(CODE_INFO_LED_GREEN);

@@ -49,7 +49,7 @@ void Camera::startAutomatic()
 
 void Camera::stopAutomatic()
 {
-    qDebug(()<<"stopping automatic controll....";
+    qDebug()<<"stopping automatic controll....";
 	end = true;
 }
 
@@ -63,11 +63,11 @@ Mat Camera::grab()
 		if(tries == 4)
 		{
             cerr<<"grabbing failed!"<<endl;
-			return Mat(1, 1);
+            return Mat(1,1,CV_8UC3);
 		}
 	}
     capture.retrieve(frame);
-    qDebug()<<"frame grabbed!"<<endl;
+    qDebug()<<"frame grabbed!";
     return frame;
     /**
 	if (!capture.read(frame)) {

@@ -24,7 +24,6 @@ MontyController::MontyController()
     connect(camera, SIGNAL(update(Mat)), automaticControl, SLOT(update(Mat)));
     connect(this, SIGNAL(startAutomatic()), camera, SLOT(startAutomatic()));
     connect(this, SIGNAL(stopAutomatic()), camera, SLOT(stopAutomatic()));
-    connect(this, SIGNAL(grab(Mat*)), camera, SLOT(grab(Mat*)));
     connect(automaticControl, SIGNAL(move(int)), movementController, SLOT(performMovement(int)));
     connect(automaticControl, SIGNAL(savePicture(Mat)),this,SLOT(savePicture(Mat)));
     connect(this, SIGNAL(move(int)), movementController, SLOT(performMovement(int)));

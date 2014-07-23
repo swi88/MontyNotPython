@@ -10,7 +10,7 @@ FlashController::FlashController()
     isRunning = false;
 
     //init histogram
-    this->histSize = 32;
+    this->histSize = 10;
 
     thread = new QThread();
     connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
@@ -52,15 +52,26 @@ void FlashController::meassureBrigtness()
     calcHist( &gray, 1, 0, Mat(), histLuminance, 1, &histSize, &histRange, true, false);
     this->size= gray.cols*gray.rows;
     double quantil20=calcHistogramQuantile(0.2,histLuminance);
-    double quantil60=calcHistogramQuantile(0.6,histLuminance);
-    if(quantil20>0.7){
-        //under exposure
+    double quantil80=calcHistogramQuantile(0.6,histLuminance);
+    if(quantil80-quantil20>0.4){
+        qDebug()<<"exposure okay";
         emit setFlash(OFF);
-    }else if(quantil60>0.7 && quantil20<0.01){
-        //over exposure
+    }else if(1-quantil80>0.3){
+        qDebug()<<"over exposure";
         emit setFlash(FLASH_ON);
     }
-    qDebug()<<"flash controller: quantil20:"<<quantil20<<", quantil60"<<quantil60;
+    else{
+        qDebug()<<"under exposure";
+        emit setFlash(OFF);
+    }
+    if(quantil20>0.6){
+        //under exposure
+       // emit setFlash(OFF);
+    }else if(quantil80<0.2){
+        //over exposure
+       // emit setFlash(FLASH_ON);
+    }
+    qDebug()<<"flash controller: quantil20:"<<quantil20<<", quantil60"<<quantil80;
 }
 
 double FlashController::calcHistogramQuantile(double quantile, Mat hist)

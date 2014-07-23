@@ -26,6 +26,9 @@ public:
 	Mat grab();
 	signals:
 	void update(Mat picture);
+
+public slots:
+        void stopAutomatic(void);
 private:
 	QThread* thread;
     raspicam::RaspiCam_Cv capture;
@@ -34,7 +37,6 @@ private:
 	Mat frame;
 private slots:
 	void startAutomatic(void);
-	void stopAutomatic(void);
 };
 
 #endif /* CAMERA_H_ */

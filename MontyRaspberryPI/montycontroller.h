@@ -26,7 +26,7 @@ signals:
 	void startAutomatic(void);
 	void stopAutomatic(void);
 	void move(int movementstate);
-	void grab(Mat* picture);
+    //void grab(Mat* picture);
 
 public slots:
 
@@ -51,7 +51,7 @@ private slots:
     void armUp();
     void armDown();
     void autoControl();
-    void manuelControl();
+    //void manuelControl();
     void stopAutoControl();
 };
 
