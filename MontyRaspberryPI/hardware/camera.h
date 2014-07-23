@@ -39,6 +39,8 @@ private:
     AutomaticControl* automaticControl;
     raspicam::RaspiCam_Cv capture;
     bool end;
+    bool interruped;
+
     //VideoCapture capture;
 
     Mat frame;

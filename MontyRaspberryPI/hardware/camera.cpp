@@ -20,6 +20,7 @@ Camera::Camera(MovementController* controller)
         cerr<<"Error opening the camera"<<endl;
     }
     end = true;
+    interruped = false;
     thread = new QThread();
     this->moveToThread(thread);
     connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
@@ -39,28 +40,21 @@ Camera::~Camera()
 void Camera::startAutomatic()
 {
     end = false;
-    forever{
-        lock.lockForRead();
-        if(end){
-            lock.unlock();
-            break;
-        }
-        lock.unlock();
-
-    }
     while(!end)
     {
+        if(interruped){
+            end = true;
+            break;
+        }
         frame = grab();
         this->automaticControl->update(frame);
-	}
+    }
 }
 
 void Camera::stopAutomatic()
 {
     qDebug()<<"stopping automatic controll....";
-    lock.lockForWrite();
     end = true;
-    lock.unlock();
 }
 
 Mat Camera::grab()

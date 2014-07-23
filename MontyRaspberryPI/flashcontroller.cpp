@@ -22,7 +22,7 @@ FlashController::FlashController()
 void FlashController::checkImage(Mat picture)
 {
     qDebug()<<"check image";
-    if(!isRunning && time.elapsed()/1000>TIME_TO_WAIT){
+    if(!isRunning && time.elapsed()>TIME_TO_WAIT){
         isRunning = true;
         qDebug()<<"check image 2";
         time.restart();

@@ -6,6 +6,7 @@ MontyController::MontyController()
     qRegisterMetaType< cv::Mat >("cv::Mat");
     qRegisterMetaType< Mat >("Mat");
     qRegisterMetaType< MouthState >("MouthState");
+    qRegisterMetaType< InfoState >("InfoState");
     server = new Server();
     connect(server,SIGNAL(rotateLeft()),this,SLOT(rotateLeft()));
     connect(server,SIGNAL(rotateRight()),this,SLOT(rotateRight()));
