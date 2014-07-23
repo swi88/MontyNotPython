@@ -160,8 +160,13 @@ void AutomaticControl::update(Mat picture)
 				if(lxBufHigh > xSizeThreeFourth) sollMask |= MOVE_LEFT;
 				else if(lxBufHigh < xSizeFourth) sollMask |= MOVE_RIGHT;
 			}
-			if(lyBufHigh > ySizeThreeFourth) sollMask |= MOVE_DOWN;
-			else if(lyBufHigh < ySizeHalf) sollMask |= MOVE_UP;
+			if(ySize - lyBufHigh < fyBufHigh) {
+				if(fyBufHigh < ySizeFourth) sollMask |= MOVE_UP;
+				else if(fyBufHigh > ySizeHalf) sollMask |= MOVE_DOWN;
+			} else {
+				if(lyBufHigh > ySizeThreeFourth) sollMask |= MOVE_UP;
+				else if(lyBufHigh < ySizeFourth) sollMask |= MOVE_DOWN;
+			}
 			if(lxBufHigh - fxBufHigh < xSizeHalf) sollMask |= ZOOM_IN;
 			else if(lxBufHigh - fxBufHigh > xSizeThreeFourth) sollMask |= ZOOM_OUT;
 			this->movementController->performMovement(sollMask);

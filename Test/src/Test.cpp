@@ -226,30 +226,17 @@ void processVideo() {
 //					cv::Scalar(255, 0, 0), 5);
 
 			//define movement
-			if(lxBufHigh - fxBufHigh > xSizeThreeFourth) soll = ZOOM_OUT;
-			else if(lyBufHigh > ySizeThreeFourth) soll = MOVE_DOWN;
-			else if(lxBufHigh >= colsBorder - 5) soll = MOVE_RIGHT;
-			else if(fxBufHigh <= 10) soll = MOVE_LEFT;
-			else if(lyBufHigh < ySizeHalf) soll = MOVE_UP;
-			else if(lxBufHigh - fxBufHigh < xSizeHalf) soll = ZOOM_IN;
-			else soll = HOLD_POSITION;
-
-			switch(soll) {
-			case 0: cout << "move_up" << endl;
-			break;
-			case 1: cout << "move_down" << endl;
-			break;
-			case 2: cout << "move_left" << endl;
-			break;
-			case 3: cout << "move_right" << endl;
-			break;
-			case 4: cout << "zoom_in" << endl;
-			break;
-			case 5: cout << "zoom_out" << endl;
-			break;
-			default: cout << "hold_position" << endl;
-			break;
+			if(xSize - lxBufHigh < fxBufHigh) {
+				if(fxBufHigh < xSizeFourth) cout << "move left" << endl;
+				else if(fxBufHigh > xSizeHalf) cout << "move right" << endl;
+			} else {
+				if(lxBufHigh > xSizeThreeFourth) cout << "move left" << endl;
+				else if(lxBufHigh < xSizeFourth) cout << "move right" << endl;
 			}
+			if(lyBufHigh > ySizeThreeFourth) cout << "move down" << endl;
+			else if(lyBufHigh < ySizeHalf) cout << "move up" << endl;
+			if(lxBufHigh - fxBufHigh < xSizeHalf) cout << "zoom in" << endl;
+			else if(lxBufHigh - fxBufHigh > xSizeThreeFourth) cout << "zoom out" << endl;
 			performMovement();
 		} else {
 			// Falls noch kein Foto dieser ruhigen Szene gemacht wurde, mache nun eines.
