@@ -60,7 +60,7 @@ void AutomaticControl::update(Mat picture)
 {
 	sollMask = 0;
 	qDebug()<<"resize picture..";
-	resize(picture, frame, Size(640, 480), 8.3, 8.3, INTER_LANCZOS4);
+	resize(picture, frame, Size(320, 240), 32.55, 32.55, INTER_LANCZOS4);
 	cvtColor(frame, frame, CV_BGR2GRAY);
 	if(xSize == -1)
 	{
