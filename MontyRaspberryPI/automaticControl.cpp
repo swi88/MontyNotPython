@@ -20,6 +20,7 @@ AutomaticControl::AutomaticControl()
 	moveDetected = false;
 	pictureCaptured = false;
 	moving = false;
+	sollMask = 0;
 
 	// Buffer für stabileres Bewegungsrechteck
 	lxBufHigh = 0;
@@ -57,8 +58,9 @@ AutomaticControl::AutomaticControl()
 
 void AutomaticControl::update(Mat picture)
 {
+	sollMask = 0;
 	qDebug()<<"resize picture..";
-	resize(picture, frame, Size(640, 480), 8.3, 8.3, INTER_LANCZOS4);
+	resize(picture, frame, Size(320, 240), 32.55, 32.55, INTER_LANCZOS4);
 	cvtColor(frame, frame, CV_BGR2GRAY);
 	if(xSize == -1)
 	{
@@ -150,13 +152,18 @@ void AutomaticControl::update(Mat picture)
 		{
 			qDebug()<<"define movement..";
 			//define movement
-			if(lyBufHigh > ySizeThreeFourth) emit move(MOVE_DOWN);
-			else if(lxBufHigh >= colsBorder - 5) emit move(MOVE_RIGHT);
-			else if(fxBufHigh <= 10) emit move(MOVE_LEFT);
-			else if(lyBufHigh < ySizeHalf) emit move(MOVE_UP);
-			else if(lxBufHigh - fxBufHigh < xSizeHalf) emit move(ZOOM_IN);
-			else if(lxBufHigh - fxBufHigh > xSizeThreeFourth) emit move(ZOOM_OUT);
-			else qDebug()<<"hold position";
+			if(xSize - lxBufHigh < fxBufHigh) {
+				if(fxBufHigh < xSizeFourth) sollMask |= MOVE_LEFT;
+				else if(fxBufHigh > xSizeHalf) sollMask |= MOVE_RIGHT;
+			} else {
+				if(lxBufHigh > xSizeThreeFourth) sollMask |= MOVE_LEFT;
+				else if(lxBufHigh < xSizeFourth) sollMask |= MOVE_RIGHT;
+			}
+			if(lyBufHigh > ySizeThreeFourth) sollMask |= MOVE_DOWN;
+			else if(lyBufHigh < ySizeHalf) sollMask |= MOVE_UP;
+			if(lxBufHigh - fxBufHigh < xSizeHalf) sollMask |= ZOOM_IN;
+			else if(lxBufHigh - fxBufHigh > xSizeThreeFourth) sollMask |= ZOOM_OUT;
+			emit move(sollMask);
 			moveTime.restart();
 		}
 	} else {

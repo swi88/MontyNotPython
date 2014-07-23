@@ -36,28 +36,27 @@ void MovementController::performMovement(int movementState) {
 	else if(servoAngle >= 135) ist |= UPPER_END_REACHED;
 	else ist &= SERVO_RESET_MASK;
 	// falls Grenzwert für die Bewegung bereits erreicht..
-	if((soll & ist) != 0) {
-		if(soll == MOVE_UP && (ist & ZOOM_OUT_POSITION) == 0 ) soll = ZOOM_OUT;
-		else if(soll == MOVE_DOWN && (ist & ZOOM_IN_POSITION) == 0) soll = ZOOM_IN;
-		else soll = HOLD_POSITION;
+	if((ist & UPPER_END_REACHED) != 0 && (soll & MOVE_UP) != 0)
+	{
+		soll &= SERVO_RESET_MASK;
+		if((soll & ZOOM_IN) == 0 && (ist & ZOOM_OUT_POSITION) == 0 ) soll |= ZOOM_OUT;
+	}
+	else if((ist & LOWER_END_REACHED) != 0 && (soll & MOVE_DOWN) != 0)
+	{
+		soll &= SERVO_RESET_MASK;
+		if((soll & ZOOM_OUT) == 0 && (ist & ZOOM_IN_POSITION) == 0) soll |= ZOOM_IN;
 	}
 	// Falls Hindernis vor dem Ultraschallsensor erkannt..
-
-    if((ist & ZOOM_OUT_POSITION) == 0 && ultrasonic->getDistance() < 15) zoomOut();
-	switch(soll) {
-	case MOVE_UP: moveUp();
-	break;
-	case MOVE_DOWN: moveDown();
-	break;
-	case MOVE_LEFT: moveLeft();
-	break;
-	case MOVE_RIGHT: moveRight();
-	break;
-	case ZOOM_IN: zoomIn();
-	break;
-	case ZOOM_OUT: zoomOut();
-	break;
-	}
+    if((ist & ZOOM_OUT_POSITION) == 0 && ultrasonic->getDistance() < 15) {
+    	if((soll & ZOOM_IN) != 0) soll &= ZOOM_RESET_MASK;
+    	soll |= ZOOM_OUT;
+    }
+    if((soll & MOVE_UP) != 0) moveUp();
+    else if((soll & MOVE_DOWN) != 0) moveDown();
+    if((soll & MOVE_LEFT) != 0) moveLeft();
+    else if((soll & MOVE_RIGHT) != 0) moveRight();
+    if((soll & ZOOM_IN) != 0) zoomIn();
+    else if((soll & ZOOM_OUT) != 0) zoomOut();
 }
 
 void MovementController::moveUp()
@@ -79,7 +78,8 @@ void MovementController::moveLeft()
 {
     qDebug()<<"moveLeft()";
     if(!stepperRotate->isActive()) {
-        stepperRotate->clockwise(100);
+        if((ist & RIGHT_END_REACHED) != 0) stepperRotate->clockwise(30);
+        else stepperRotate->clockwise(10);
     	if(buttonRotate->isPressed()) ist |= LEFT_END_REACHED;
     	else ist &= ROTATION_RESET_MASK;
     }
@@ -89,7 +89,8 @@ void MovementController::moveRight()
 {
     qDebug()<<"moveRight()";
 	if(!stepperRotate->isActive()) {
-        stepperRotate->counterclockwise(100);
+        if((ist & LEFT_END_REACHED) != 0) stepperRotate->counterclockwise(30);
+        else stepperRotate->counterclockwise(10);
     	if(buttonRotate->isPressed()) ist |= RIGHT_END_REACHED;
     	else ist &= ROTATION_RESET_MASK;
 	}
@@ -99,7 +100,7 @@ void MovementController::zoomIn()
 {
     qDebug()<<"zoomIn()";
 	if(!stepperZoom->isActive()) {
-        if((ist & ZOOM_OUT_POSITION) != 0) stepperZoom->counterclockwise(20);
+        if((ist & ZOOM_OUT_POSITION) != 0) stepperZoom->counterclockwise(30);
         else stepperZoom->counterclockwise(10);
     	if(buttonZoom->isPressed()) ist |= ZOOM_IN_POSITION;
     	else ist &= ZOOM_RESET_MASK;
@@ -110,7 +111,7 @@ void MovementController::zoomOut()
 {
     qDebug()<<"zoomOut()";
 	if(!stepperZoom->isActive()) {
-        if((ist & ZOOM_IN_POSITION) != 0) stepperZoom->clockwise(20);
+        if((ist & ZOOM_IN_POSITION) != 0) stepperZoom->clockwise(30);
         else stepperZoom->clockwise(10);
     	if(buttonZoom->isPressed()) ist |= ZOOM_OUT_POSITION;
     	else ist &= ZOOM_RESET_MASK;

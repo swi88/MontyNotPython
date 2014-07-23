@@ -76,7 +76,8 @@ private:
     QTime time;
     QTime moveTime;
 
-    const static  int LAST_PICTURE;
+    int sollMask;
+    const static int LAST_PICTURE;
     const static int LAST_MOVE;
 private slots:
 	void update(Mat picture);
