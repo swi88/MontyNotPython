@@ -71,7 +71,7 @@ Mat Camera::grab()
 		}
 	}
     capture.retrieve(frame);
-    emit update(frame);
+    emit update(frame.clone());
     qDebug()<<"frame grabbed!";
     return frame;
     /**

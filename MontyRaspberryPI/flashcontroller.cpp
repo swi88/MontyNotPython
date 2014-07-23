@@ -1,7 +1,7 @@
 #include "flashcontroller.h"
 #include <QDebug>
 
-const int FlashController::TIME_TO_WAIT = 200; //200ms
+const int FlashController::TIME_TO_WAIT = 2000; //200ms
 FlashController::FlashController()
 {
     //so first picture is using for controll
@@ -21,10 +21,8 @@ FlashController::FlashController()
 
 void FlashController::checkImage(Mat picture)
 {
-    qDebug()<<"check image";
     if(!isRunning && time.elapsed()>TIME_TO_WAIT){
         isRunning = true;
-        qDebug()<<"check image 2";
         time.restart();
         this->picture = picture;
         meassureBrigtness();
@@ -55,14 +53,13 @@ void FlashController::meassureBrigtness()
     double quantil80=calcHistogramQuantile(0.6,histLuminance);
     if(quantil80-quantil20>0.4){
         qDebug()<<"exposure okay";
-        emit setFlash(OFF);
     }else if(1-quantil80>0.3){
         qDebug()<<"over exposure";
-        emit setFlash(FLASH_ON);
+        emit setFlash(OFF);
     }
     else{
         qDebug()<<"under exposure";
-        emit setFlash(OFF);
+        emit setFlash(FLASH_ON);
     }
     //qDebug()<<"flash controller: quantil20:"<<quantil20<<", quantil60"<<quantil80;
 }
