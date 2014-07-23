@@ -8,6 +8,8 @@
 #ifndef AUTOMATICCONTROL_H_
 #define AUTOMATICCONTROL_H_
 
+#include "movementController.h"
+
 #include <opencv2/video/background_segm.hpp>
 #include <QObject>
 #include <QTime>

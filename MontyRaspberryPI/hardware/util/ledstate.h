@@ -5,8 +5,7 @@ enum InfoState{
     CONTROLL_AUTO,
     CONTROLL_MANUAL,
     TAKE_PHOTO,
-    OFF
-};
+    };
 enum MouthState{
     FLASH_ON,
     OFF

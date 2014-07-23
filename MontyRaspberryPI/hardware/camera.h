@@ -14,6 +14,8 @@
 #include <QThread>
 #include <raspicam/raspicam_cv.h>
 #include <QDebug>
+#include <automaticControl.h>
+#include <movementController.h>
 
 using namespace cv;
 
@@ -21,7 +23,7 @@ class Camera : public QObject
 {
 	Q_OBJECT
 public:
-	Camera(MovementController*);
+    Camera(MovementController* controller);
     ~Camera();
 	Mat grab();
 	signals:
@@ -33,6 +35,7 @@ private:
 	QThread* thread;
     AutomaticControl* automaticControl;
     raspicam::RaspiCam_Cv capture;
+    bool end;
 
     //VideoCapture capture;
 

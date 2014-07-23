@@ -9,10 +9,10 @@
 
 using namespace std;
 
-Camera::Camera(MovementController* movementController)
+Camera::Camera(MovementController* controller)
 {
     //capture(0);
-    automaticControl = new AutomaticControl(movementController);
+    automaticControl = new AutomaticControl(controller);
     capture.set( CV_CAP_PROP_FORMAT, CV_8UC3 );
     capture.set(CV_CAP_PROP_FRAME_WIDTH, 1920);
     capture.set(CV_CAP_PROP_FRAME_HEIGHT, 1080);
@@ -23,7 +23,7 @@ Camera::Camera(MovementController* movementController)
     thread = new QThread();
     this->moveToThread(thread);
     connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
-    connect(automaticControl, SIGNAL(move(int)), movementController, SLOT(performMovement(int)));
+    connect(automaticControl, SIGNAL(move(int)), controller, SLOT(performMovement(int)));
     connect(automaticControl, SIGNAL(savePicture(Mat)),this,SLOT(savePicture(Mat)));
 
     thread->start();

@@ -50,15 +50,10 @@ void LEDController::setInfoLEDState(InfoState state)
             this->codeInfoCurrent =oldCode;
             delay(50);
         }
-        setInfoLEDState(oldCode);
+        setInfoLEDState(controllModeCurrent);
         break;
     }
-    case OFF:{
-        codeInfoCurrent = 0 ;
-        codeMouthCurrent = 0 ;
-        setLEDs();
-        break;
-    }
+
 
     default:
         break;
