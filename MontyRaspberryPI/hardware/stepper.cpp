@@ -1,7 +1,5 @@
 ///g++ -Wall -o stepper stepper.cpp
 
-
-// GPIO PINS 17,18,21,22
 #include "stepper.h"
 #include "util/gpio.h"
 #include <QThread>
@@ -15,7 +13,6 @@ const int Stepper::TIME_TO_WAIT = 10;
 Stepper::Stepper(int pin1, int pin2,int pin3, int pin4){
     counter=0;
     active=false;
-    qDebug()<<"init gpio";
     gpios.push_back(pin1);
     gpios.push_back(pin2);
     gpios.push_back(pin3);
@@ -158,10 +155,6 @@ void Stepper::sequence8()
     digitalWrite(gpios.at(0), LOW);
 }
 
-void Stepper::switchState()
-{
-    active=!active;
-}
 /**
  * @brief clockwise, called by thread
  */

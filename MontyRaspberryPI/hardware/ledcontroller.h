@@ -33,6 +33,7 @@ private:
 
     int codeInfoCurrent;
     int codeMouthCurrent;
+    void startUp();
 
     void setLEDs();
     void writeToRegisters(int value);
