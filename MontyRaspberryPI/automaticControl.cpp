@@ -10,9 +10,10 @@ using namespace std;
 
 const int AutomaticControl::LAST_PICTURE = 60;
 const int AutomaticControl::LAST_MOVE = 3;
-AutomaticControl::AutomaticControl()
+AutomaticControl::AutomaticControl(MovementController* movementController)
 {
 	pMOG = new BackgroundSubtractorMOG();
+	this->movementController = movementController;
     time.start();
     time.addSecs(120);
     moveTime.start();
@@ -163,7 +164,7 @@ void AutomaticControl::update(Mat picture)
 			else if(lyBufHigh < ySizeHalf) sollMask |= MOVE_UP;
 			if(lxBufHigh - fxBufHigh < xSizeHalf) sollMask |= ZOOM_IN;
 			else if(lxBufHigh - fxBufHigh > xSizeThreeFourth) sollMask |= ZOOM_OUT;
-			emit move(sollMask);
+			this->movementController->performMovement(sollMask);
 			moveTime.restart();
 		}
 	} else {
