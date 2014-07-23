@@ -17,7 +17,7 @@ import android.widget.Toast;
 
 public class MainActivity extends Activity {
 
-	private static final String DOMAIN = "10.0.2.2"; //Monty: "192.168.42.1"; Lokal: "10.0.2.2";
+	private static final String DOMAIN = "192.168.42.1"; //Monty: "192.168.42.1"; Lokal: "10.0.2.2";
 	private static final int PORT = 5100;
 	
 	private Socket socket;
@@ -41,7 +41,6 @@ public class MainActivity extends Activity {
 	private static final String AUTOMATIC_OFF = "#AUTOMATIC_OFF";
 	private static final String AUTOMATIC_ON = "#AUTOMATIC_ON";
 	
-	private static boolean automaticMode = false;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +60,9 @@ public class MainActivity extends Activity {
 		public void run() {
 			// connect to the server
 			connect();
+			if (isInterrupted()) {
+				return;
+			}
 			if (connected) {
 //				String command = "";
 //				while (!command.equals(QUIT_COMMAND)) {
@@ -146,6 +148,8 @@ public class MainActivity extends Activity {
 //						e.printStackTrace();
 //					}
 //				}
+			} else {
+				
 			}
 		}
 	}
@@ -171,70 +175,51 @@ public class MainActivity extends Activity {
 			System.out.println("ERROR: IOException - " + e.getMessage());
 			return false;
 		}
+		runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				Toast.makeText(MainActivity.this, "Verbunden mit Monty", Toast.LENGTH_SHORT).show();		
+			}
+		});
 		connected = true;
 		return true;
 	}
 	
 	public void onCommand(View v) {
 		// send command to server
-		if (!automaticMode) {
-			if (connected) {
-				try {
-					String command = null;
-					switch(v.getId()) {
-					case R.id.buttonTakePicture:
-						command = TAKE_PICTURE;
-						break;
-					case R.id.buttonRotateLeft:
-						command = ROTATE_LEFT;
-						break;
-					case R.id.buttonRotateRight:
-						command = ROTATE_RIGHT;
-						break;
-					case R.id.button1Up:
-						command = ZOOM_IN;
-						break;
-					case R.id.button1Down:
-						command = ZOOM_OUT;
-						break;
-					case R.id.button2Up:
-						command = ARM_UP;
-						break;
-					case R.id.button2Down:
-						command = ARM_DOWN;
-						break;
-					}
-					sendToServer(command);
-					System.out.println("CLIENT: sent command to server");
-				} catch (IOException e) {
-					e.printStackTrace();
-					Toast.makeText(this, R.string.server_not_reachable, Toast.LENGTH_SHORT).show();
-					// try to reconnect
-					if (!listener.isAlive()) {
-						try {
-							listener.start();
-							Toast.makeText(this, "Verbinde mit Server", Toast.LENGTH_SHORT).show();
-						} catch (Exception e2) {
-						}
-					} else {
-						Toast.makeText(this, "Verbindungsversuch fehlgeschlagen!", Toast.LENGTH_SHORT).show();
-					}
+		if (connected) {
+			try {
+				String command = null;
+				switch(v.getId()) {
+				case R.id.buttonTakePicture:
+					command = TAKE_PICTURE;
+					break;
+				case R.id.buttonRotateLeft:
+					command = ROTATE_LEFT;
+					break;
+				case R.id.buttonRotateRight:
+					command = ROTATE_RIGHT;
+					break;
+				case R.id.button1Up:
+					command = ZOOM_IN;
+					break;
+				case R.id.button1Down:
+					command = ZOOM_OUT;
+					break;
+				case R.id.button2Up:
+					command = ARM_UP;
+					break;
+				case R.id.button2Down:
+					command = ARM_DOWN;
+					break;
 				}
-			} else {
-				Toast.makeText(this, R.string.server_not_connected, Toast.LENGTH_SHORT).show();
-				// try to reconnect
-				if (!listener.isAlive()) {
-					try {
-						listener.start();
-						Toast.makeText(this, "Verbinde mit Server", Toast.LENGTH_SHORT).show();
-					} catch (Exception e) {
-					}
-				} else {
-					Toast.makeText(this, "Verbindungsversuch fehlgeschlagen!", Toast.LENGTH_SHORT).show();
-				}
+				sendToServer(command);
+				System.out.println("CLIENT: sent command to server");
+			} catch (IOException e) {
+				tryToReconnect();
 			}
 		} else {
-			Toast.makeText(this, "Manueller Modus nicht aktiviert!", Toast.LENGTH_SHORT).show();
+			tryToReconnect();
 		}
 	}
 	
@@ -249,8 +234,8 @@ public class MainActivity extends Activity {
 	}
 
 	public void onSwitchClick(View v) {
-		if (((Switch) v).isChecked()) {
-			if (connected) {
+		if (connected) {
+			if (((Switch) v).isChecked()) {
 				try {
 					sendToServer(AUTOMATIC_OFF);
 					automaticMode = false;
@@ -258,22 +243,45 @@ public class MainActivity extends Activity {
 				}
 				Toast.makeText(this, "Manuelle Steuerung aktiviert", Toast.LENGTH_SHORT).show();
 			} else {
-				Toast.makeText(this, R.string.server_not_connected, Toast.LENGTH_SHORT).show();
-				((Switch) v).setChecked(false);
-			}
-		} else {
-			if (connected) {
 				try {
 					sendToServer(AUTOMATIC_ON);
 					automaticMode = true;
 				} catch (Exception e) {
 				}
 				Toast.makeText(this, "Manuelle Steuerung deaktiviert", Toast.LENGTH_SHORT).show();
-			}  else {
-				Toast.makeText(this, R.string.server_not_connected, Toast.LENGTH_SHORT).show();
-				((Switch) v).setChecked(true);
 			}
+		}  else {
+			((Switch) v).setChecked(true);
+			tryToReconnect();
 		}
+	}
+	
+	private void tryToReconnect() {
+		Toast.makeText(this, R.string.server_not_connected, Toast.LENGTH_SHORT).show();
+		// try to reconnect
+		if (!listener.isAlive()) {
+			try {
+				listener = new ServerListenerThread();
+				listener.start();
+				Toast.makeText(this, "Verbinde mit Server", Toast.LENGTH_SHORT).show();
+			} catch (Exception e) {
+			}
+		} else {
+			Toast.makeText(this, "Verbindungsversuch fehlgeschlagen!", Toast.LENGTH_SHORT).show();
+		}
+	}
+	
+	@Override
+	protected void onPause() {
+		listener.interrupt();
+		super.onPause();
+	}
+
+	@Override
+	protected void onResume() {
+		listener = new ServerListenerThread();
+		listener.start();
+		super.onResume();
 	}
 	
 }
