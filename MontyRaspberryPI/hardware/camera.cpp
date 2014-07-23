@@ -104,7 +104,7 @@ void Camera::savePicture(Mat picture)
     char nameBuffer [80];
     time (&rawtime);
     timeinfo = localtime (&rawtime);
-    strftime (nameBuffer,80,"picture_%F_%T.png",timeinfo);
+    strftime (nameBuffer,80,"/home/pi/images/picture_%F_%T.png",timeinfo);
 
     qDebug()<<"save picture..";
     if (!picture.data)
@@ -113,7 +113,7 @@ void Camera::savePicture(Mat picture)
     }
     if(imwrite(nameBuffer, picture))
     {
-        imwrite("last.png", picture);
+        imwrite("/home/pi/images/last.png", picture);
         qDebug()<<"picture saved!";
 
         // send picture back to client
