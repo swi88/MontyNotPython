@@ -11,6 +11,7 @@ using namespace std;
 
 Camera::Camera(MovementController* controller)
 {
+    interrupted = false;
     //capture(0);
     automaticControl = new AutomaticControl(controller);
     capture.set( CV_CAP_PROP_FORMAT, CV_8UC3 );
@@ -19,8 +20,6 @@ Camera::Camera(MovementController* controller)
     if (!capture.open()) {
         cerr<<"Error opening the camera"<<endl;
     }
-    end = true;
-    interruped = false;
     thread = new QThread();
     this->moveToThread(thread);
     connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
@@ -39,22 +38,26 @@ Camera::~Camera()
 
 void Camera::startAutomatic()
 {
-    end = false;
-    while(!end)
+    while(true)
     {
-        if(interruped){
-            end = true;
+        mutex.lock();
+        if(interrupted){
+            mutex.unlock();
             break;
         }
         frame = grab();
         this->automaticControl->update(frame);
+        mutex.unlock();
     }
+    qDebug()<<"automatic controll stopped";
 }
 
 void Camera::stopAutomatic()
 {
     qDebug()<<"stopping automatic controll....";
-    end = true;
+    mutex.lock();
+    interrupted = true;
+    mutex.unlock();
 }
 
 Mat Camera::grab()

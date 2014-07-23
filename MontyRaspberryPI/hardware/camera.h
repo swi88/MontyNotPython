@@ -14,6 +14,7 @@
 #include <QThread>
 #include <raspicam/raspicam_cv.h>
 #include <QDebug>
+#include <QMutex>
 #include <automaticControl.h>
 #include <movementController.h>
 #include "util/ledstate.h"
@@ -38,8 +39,8 @@ private:
 	QThread* thread;
     AutomaticControl* automaticControl;
     raspicam::RaspiCam_Cv capture;
-    bool end;
-    bool interruped;
+    bool interrupted;
+    QMutex mutex;
 
     //VideoCapture capture;
 
