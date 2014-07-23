@@ -122,7 +122,7 @@ void processVideo() {
 	int rowsBorder;
 
 	// structured element, wird zur Rauschentfernung benötigt
-	Mat elem = getStructuringElement(MORPH_ELLIPSE, Size(7, 7), Point(3, 3));
+	Mat elem = getStructuringElement(MORPH_ELLIPSE, Size(3, 3), Point(1, 1));
 	Mat reduced;
 
 	if (!capture.isOpened()) {
@@ -160,7 +160,7 @@ void processVideo() {
 		//update the background model
 		pMOG->operator()(reduced, fgMaskMOG, 0.25);
 		//rauschen entfernen
-		dilate(fgMaskMOG, fgMaskMOG, elem);
+		erode(fgMaskMOG, fgMaskMOG, elem);
 		//eckpunkte finden, falls Bewegung vorhanden
 		fx = 0;
 		fy = 0;

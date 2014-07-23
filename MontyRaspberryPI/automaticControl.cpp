@@ -7,15 +7,11 @@
 
 using namespace std;
 
-
-const int AutomaticControl::LAST_PICTURE = 60;
 const int AutomaticControl::LAST_MOVE = 3;
 AutomaticControl::AutomaticControl(MovementController* movementController)
 {
 	pMOG = new BackgroundSubtractorMOG();
 	this->movementController = movementController;
-    time.start();
-    time.addSecs(120);
     moveTime.start();
     moveTime.addSecs(6);
 	moveDetected = false;
@@ -49,7 +45,7 @@ AutomaticControl::AutomaticControl(MovementController* movementController)
 	ySizeThreeFourth = -1;
 	lx = -1;
 	rowsBorder = -1;
-	elem = getStructuringElement(MORPH_ELLIPSE, Size(7, 7), Point(3, 3));
+	elem = getStructuringElement(MORPH_ELLIPSE, Size(3, 3), Point(1, 1));
 
     thread = new QThread();
     this->moveToThread(thread);
@@ -84,10 +80,11 @@ void AutomaticControl::update(Mat picture)
 	}
 	//update the background model
 	qDebug()<<"background subtraction..";
-	pMOG->operator()(frame, fgMaskMOG, 0.25);
+	if(moveTime.elapsed() / 1000 > LAST_MOVE) pMOG->operator()(frame, fgMaskMOG, 0.25);
+	else pMOG->operator()(frame, fgMaskMOG, 1.00);
 	//rauschen entfernen
 	qDebug()<<"noise reduction..";
-	dilate(fgMaskMOG, fgMaskMOG, elem);
+	erode(fgMaskMOG, fgMaskMOG, elem);
 	//eckpunkte finden, falls Bewegung vorhanden
 	qDebug()<<"movement detection..";
 	fx = 0;
@@ -149,7 +146,7 @@ void AutomaticControl::update(Mat picture)
 		}
 
 		bufIdx = bufIdx == 7 ? 0 : bufIdx + 1;
-		if(moveTime.elapsed() > LAST_MOVE)
+		if(moveTime.elapsed() / 1000 > LAST_MOVE)
 		{
 			qDebug()<<"define movement..";
 			//define movement
@@ -160,13 +157,8 @@ void AutomaticControl::update(Mat picture)
 				if(lxBufHigh > xSizeThreeFourth) sollMask |= MOVE_LEFT;
 				else if(lxBufHigh < xSizeFourth) sollMask |= MOVE_RIGHT;
 			}
-			if(ySize - lyBufHigh < fyBufHigh) {
-				if(fyBufHigh < ySizeFourth) sollMask |= MOVE_UP;
-				else if(fyBufHigh > ySizeHalf) sollMask |= MOVE_DOWN;
-			} else {
-				if(lyBufHigh > ySizeThreeFourth) sollMask |= MOVE_UP;
-				else if(lyBufHigh < ySizeFourth) sollMask |= MOVE_DOWN;
-			}
+			if(lyBufHigh > ySizeThreeFourth) sollMask |= MOVE_DOWN;
+			else if(lyBufHigh < ySizeHalf) sollMask |= MOVE_UP;
 			if(lxBufHigh - fxBufHigh < xSizeHalf) sollMask |= ZOOM_IN;
 			else if(lxBufHigh - fxBufHigh > xSizeThreeFourth) sollMask |= ZOOM_OUT;
 			this->movementController->performMovement(sollMask);
@@ -175,11 +167,10 @@ void AutomaticControl::update(Mat picture)
 	} else {
 		qDebug()<<"no movement detected..";
 		// Falls noch kein Foto dieser ruhigen Szene gemacht wurde, mache nun eines.
-        if(!pictureCaptured  && time.elapsed() > LAST_PICTURE) {
+        if(!pictureCaptured  && moveTime.elapsed() / 1000 > LAST_MOVE) {
         	qDebug()<<"new picture command..";
 			emit savePicture(picture);
 			pictureCaptured = true;
-            time.restart();
 		}
 	}
 	qDebug()<<"end automatic controll";
