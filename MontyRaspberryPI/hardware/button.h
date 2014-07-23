@@ -2,6 +2,7 @@
 #define BUTTON_H
 #include <QThread>
 #include <wiringPi.h>
+#include <QDebug>
 
 class Button: public QObject
 {
