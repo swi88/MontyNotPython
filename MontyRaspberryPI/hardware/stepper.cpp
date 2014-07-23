@@ -27,7 +27,7 @@ Stepper::Stepper(int pin1, int pin2,int pin3, int pin4){
     digitalWrite(pin4, LOW);
     thread = new QThread();
     this->moveToThread(thread);
-    connect(this, SIGNAL(finished()), thread, SLOT(quit()));
+    connect(this, SIGNAL(finished()), thread, SLOT(terminate()));
     connect(thread, SIGNAL(finished()), this, SLOT(switchActiveState()));
     connect(thread, SIGNAL(started()), this, SLOT(switchActiveState()));
 
@@ -192,7 +192,7 @@ void Stepper::counterclockwise()
         //cout << counter<<"\n";
     }
     disconnect(thread,SIGNAL(started()),this,SLOT(counterclockwise()));
-    qDebug()<<"end cw of stepper "<<gpios.at(0);
+    qDebug()<<"end ccw of stepper "<<gpios.at(0);
     emit finished();
 
 }

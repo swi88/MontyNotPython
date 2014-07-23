@@ -18,7 +18,7 @@ Camera::Camera()
     if (!capture.open()) {
         cerr<<"Error opening the camera"<<endl;
     }
-	end = true;
+    end = true;
     thread = new QThread();
     this->moveToThread(thread);
     connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
@@ -35,8 +35,8 @@ Camera::~Camera()
 
 void Camera::startAutomatic()
 {
-	end = false;
-	while(!end)
+    end = false;
+    while(!end)
     {
         if(capture.grab()){
             capture.retrieve(frame);
@@ -50,7 +50,7 @@ void Camera::startAutomatic()
 void Camera::stopAutomatic()
 {
     qDebug()<<"stopping automatic controll....";
-	end = true;
+    end = true;
 }
 
 Mat Camera::grab()

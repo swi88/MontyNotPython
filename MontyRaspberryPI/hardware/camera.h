@@ -25,15 +25,16 @@ public:
     ~Camera();
 	Mat grab();
 	signals:
-	void update(Mat picture);
+    void update(Mat picture);
 
 public slots:
         void stopAutomatic(void);
 private:
 	QThread* thread;
     raspicam::RaspiCam_Cv capture;
+
     //VideoCapture capture;
-	bool end;
+
 	Mat frame;
 private slots:
 	void startAutomatic(void);

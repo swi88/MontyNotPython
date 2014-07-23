@@ -76,7 +76,7 @@ void MovementController::moveDown()
 
 void MovementController::moveLeft()
 {
-    qDebug()<<"moveLeft()";
+    qDebug()<<"moveLeft() is active "<<stepperRotate->isActive();
     if(!stepperRotate->isActive()) {
         if((ist & RIGHT_END_REACHED) != 0) stepperRotate->clockwise(30);
         else stepperRotate->clockwise(10);
@@ -87,7 +87,7 @@ void MovementController::moveLeft()
 
 void MovementController::moveRight()
 {
-    qDebug()<<"moveRight()";
+    qDebug()<<"moveRight() is active "<<stepperRotate->isActive();
 	if(!stepperRotate->isActive()) {
         if((ist & LEFT_END_REACHED) != 0) stepperRotate->counterclockwise(30);
         else stepperRotate->counterclockwise(10);
@@ -98,7 +98,7 @@ void MovementController::moveRight()
 
 void MovementController::zoomIn()
 {
-    qDebug()<<"zoomIn()";
+    qDebug()<<"zoomIn() is active: "<< stepperZoom->isActive();
 	if(!stepperZoom->isActive()) {
         if((ist & ZOOM_OUT_POSITION) != 0) stepperZoom->counterclockwise(30);
         else stepperZoom->counterclockwise(10);
@@ -109,7 +109,7 @@ void MovementController::zoomIn()
 
 void MovementController::zoomOut()
 {
-    qDebug()<<"zoomOut()";
+    qDebug()<<"zoomOut() is active: "<<stepperZoom->isActive();
 	if(!stepperZoom->isActive()) {
         if((ist & ZOOM_IN_POSITION) != 0) stepperZoom->clockwise(30);
         else stepperZoom->clockwise(10);

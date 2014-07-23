@@ -54,24 +54,17 @@ void FlashController::meassureBrigtness()
     double quantil20=calcHistogramQuantile(0.2,histLuminance);
     double quantil80=calcHistogramQuantile(0.6,histLuminance);
     if(quantil80-quantil20>0.4){
-        qDebug()<<"exposure okay";
+        //qDebug()<<"exposure okay";
         emit setFlash(OFF);
     }else if(1-quantil80>0.3){
         qDebug()<<"over exposure";
-        emit setFlash(FLASH_ON);
+        //emit setFlash(FLASH_ON);
     }
     else{
-        qDebug()<<"under exposure";
+        //qDebug()<<"under exposure";
         emit setFlash(OFF);
     }
-    if(quantil20>0.6){
-        //under exposure
-       // emit setFlash(OFF);
-    }else if(quantil80<0.2){
-        //over exposure
-       // emit setFlash(FLASH_ON);
-    }
-    qDebug()<<"flash controller: quantil20:"<<quantil20<<", quantil60"<<quantil80;
+    //qDebug()<<"flash controller: quantil20:"<<quantil20<<", quantil60"<<quantil80;
 }
 
 double FlashController::calcHistogramQuantile(double quantile, Mat hist)

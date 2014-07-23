@@ -22,6 +22,7 @@ class MontyController : public QObject
 public:
     explicit MontyController();
 
+
 signals:
 	void startAutomatic(void);
 	void stopAutomatic(void);

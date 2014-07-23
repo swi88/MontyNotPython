@@ -8,7 +8,7 @@ const static int CODE_FLASH_OFF = 0;
 const static int CODE_INFO_LED_GREEN = 32;
 const static int CODE_INFO_LED_RED = 64;
 
-const static int CODE_INFO_LED_TAKE_PICTURE = 96;
+const static int CODE_INFO_LED_TAKE_PICTURE = 128;
 
 LEDController::LEDController(int dataPin,int clockPin,int latchPin) :QObject()
 {
@@ -50,7 +50,13 @@ void LEDController::setInfoLEDState(InfoState state)
             this->codeInfoCurrent =oldCode;
             delay(50);
         }
-        setInfoLEDState(controllModeCurrent);
+        setInfoLEDState(oldCode);
+        break;
+    }
+    case OFF:{
+        codeInfoCurrent = 0 ;
+        codeMouthCurrent = 0 ;
+        setLEDs();
         break;
     }
 
@@ -61,28 +67,26 @@ void LEDController::setInfoLEDState(InfoState state)
 
 void LEDController::startUp()
 {
-    writeToRegisters(1 | CODE_INFO_LED_GREEN);
-    delay(100);
-    writeToRegisters(3 | CODE_INFO_LED_GREEN);
-    delay(100);
-    writeToRegisters(7 | CODE_INFO_LED_GREEN);
-    delay(100);
-    writeToRegisters(15 | CODE_INFO_LED_GREEN);
-    delay(100);
-    writeToRegisters(31 | CODE_INFO_LED_GREEN);
-    delay(100);
-    writeToRegisters(31 | CODE_INFO_LED_GREEN);
-    delay(100);
-    writeToRegisters(15 | CODE_INFO_LED_GREEN);
-    delay(100);
-    writeToRegisters(7 | CODE_INFO_LED_GREEN);
-    delay(100);
-    writeToRegisters(3 | CODE_INFO_LED_GREEN);
-    delay(100);
-    writeToRegisters(1 |  CODE_INFO_LED_GREEN);
-    delay(100);
-    writeToRegisters(CODE_FLASH_OFF | CODE_INFO_LED_GREEN);
-    delay(100);
+    for (int i = 0; i < 4; ++i) {
+        writeToRegisters(1 | CODE_INFO_LED_RED | CODE_INFO_LED_TAKE_PICTURE);
+        delay(100);
+        writeToRegisters(3 | CODE_INFO_LED_RED);
+        delay(100);
+        writeToRegisters(7 | CODE_INFO_LED_RED| CODE_INFO_LED_TAKE_PICTURE);
+        delay(100);
+        writeToRegisters(15 | CODE_INFO_LED_RED);
+        delay(100);
+        writeToRegisters(31 | CODE_INFO_LED_RED| CODE_INFO_LED_TAKE_PICTURE);
+        delay(100);
+        writeToRegisters(28 | CODE_INFO_LED_RED);
+        delay(100);
+        writeToRegisters(24 | CODE_INFO_LED_RED| CODE_INFO_LED_TAKE_PICTURE);
+        delay(100);
+        writeToRegisters(16 | CODE_INFO_LED_RED);
+        delay(100);
+        writeToRegisters(CODE_FLASH_OFF | CODE_INFO_LED_RED| CODE_INFO_LED_TAKE_PICTURE);
+        delay(100);
+    }
     writeToRegisters(CODE_INFO_LED_GREEN);
 }
 

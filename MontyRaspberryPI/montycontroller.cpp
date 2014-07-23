@@ -5,6 +5,7 @@ MontyController::MontyController()
 {
     qRegisterMetaType< cv::Mat >("cv::Mat");
     qRegisterMetaType< Mat >("Mat");
+    qRegisterMetaType< MouthState >("MauthState");
 
     server = new Server();
     connect(server,SIGNAL(takePicture()),this,SLOT(takePicture()));
@@ -41,6 +42,7 @@ MontyController::MontyController()
     this->stopAutoControl();
     qDebug()<<"started";
 }
+
 
 /**
  * @brief automatic mode
